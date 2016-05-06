@@ -13,6 +13,9 @@
 		83BFAEC41CD1D24D00C9F7C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC31CD1D24D00C9F7C0 /* Assets.xcassets */; };
 		83BFAEC71CD1D24D00C9F7C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC51CD1D24D00C9F7C0 /* LaunchScreen.storyboard */; };
 		83D231B01CD9CCC50033862F /* MessageStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */; };
+		83D94A2E1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */; };
+		83D94A301CDD3A7500D41D4D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D94A2F1CDD3A7500D41D4D /* Message.swift */; };
+		83D94A321CDD442100D41D4D /* MessageStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D94A311CDD442100D41D4D /* MessageStreamTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		83BFAEC61CD1D24D00C9F7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83BFAEC81CD1D24D00C9F7C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageStreamViewController.swift; sourceTree = "<group>"; };
+		83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageStreamTableViewController.swift; sourceTree = "<group>"; };
+		83D94A2F1CDD3A7500D41D4D /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		83D94A311CDD442100D41D4D /* MessageStreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageStreamTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +69,9 @@
 				83BFAEC51CD1D24D00C9F7C0 /* LaunchScreen.storyboard */,
 				83BFAEC81CD1D24D00C9F7C0 /* Info.plist */,
 				83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */,
+				83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */,
+				83D94A2F1CDD3A7500D41D4D /* Message.swift */,
+				83D94A311CDD442100D41D4D /* MessageStreamTableViewCell.swift */,
 			);
 			path = Emoto;
 			sourceTree = "<group>";
@@ -139,7 +148,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				83D231B01CD9CCC50033862F /* MessageStreamViewController.swift in Sources */,
+				83D94A2E1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift in Sources */,
+				83D94A301CDD3A7500D41D4D /* Message.swift in Sources */,
 				83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */,
+				83D94A321CDD442100D41D4D /* MessageStreamTableViewCell.swift in Sources */,
 				83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

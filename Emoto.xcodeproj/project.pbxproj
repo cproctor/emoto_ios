@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		127AF75A1CDD53E900910EFB /* CopresenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */; };
 		83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */; };
 		83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */; };
 		83BFAEC21CD1D24D00C9F7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC01CD1D24D00C9F7C0 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopresenceTableViewCell.swift; sourceTree = "<group>"; };
 		83BFAEB91CD1D24D00C9F7C0 /* Emoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				83BFAEC31CD1D24D00C9F7C0 /* Assets.xcassets */,
 				83BFAEC51CD1D24D00C9F7C0 /* LaunchScreen.storyboard */,
 				83BFAEC81CD1D24D00C9F7C0 /* Info.plist */,
+				127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */,
 				83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */,
 				83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */,
 				83D94A2F1CDD3A7500D41D4D /* Message.swift */,
@@ -151,6 +154,7 @@
 				83D94A2E1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift in Sources */,
 				83D94A301CDD3A7500D41D4D /* Message.swift in Sources */,
 				83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */,
+				127AF75A1CDD53E900910EFB /* CopresenceTableViewCell.swift in Sources */,
 				83D94A321CDD442100D41D4D /* MessageStreamTableViewCell.swift in Sources */,
 				83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */,
 			);

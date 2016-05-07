@@ -13,11 +13,14 @@ class MessageStreamTableViewController: UITableViewController {
     // MARK: Properties
     var messages = [Message]()
     
+    var myFormatter: NSDateFormatter?
+    var yourFormatter: NSDateFormatter?
+    var timer: NSTimer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         loadSampleMessages()
-        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -62,6 +65,7 @@ class MessageStreamTableViewController: UITableViewController {
         
         let cellIdentifier = "MessageTableViewCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! MessageStreamTableViewCell
+        
         let message = messages[indexPath.row]
         cell.messageText.text = message.text
         cell.emoto.image = message.emoto
@@ -72,6 +76,18 @@ class MessageStreamTableViewController: UITableViewController {
         
     }
 
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let  headerCell = tableView.dequeueReusableCellWithIdentifier("HeaderCell") as! CopresenceTableViewCell
+        
+        headerCell.backgroundColor = UIColor.lightGrayColor()
+        
+        return headerCell
+    }
+
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 103.0
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

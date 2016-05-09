@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1236DBFA1CE0378A009DEE1F /* EmotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1236DBF91CE0378A009DEE1F /* EmotoTableViewCell.swift */; };
+		1236DBFC1CE037E9009DEE1F /* EmotoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1236DBFB1CE037E9009DEE1F /* EmotoTableViewController.swift */; };
 		127AF75A1CDD53E900910EFB /* CopresenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */; };
 		83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */; };
 		83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1236DBF91CE0378A009DEE1F /* EmotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmotoTableViewCell.swift; sourceTree = "<group>"; };
+		1236DBFB1CE037E9009DEE1F /* EmotoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmotoTableViewController.swift; sourceTree = "<group>"; };
 		127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopresenceTableViewCell.swift; sourceTree = "<group>"; };
 		83BFAEB91CD1D24D00C9F7C0 /* Emoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -71,10 +75,12 @@
 				83BFAEC51CD1D24D00C9F7C0 /* LaunchScreen.storyboard */,
 				83BFAEC81CD1D24D00C9F7C0 /* Info.plist */,
 				127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */,
-				83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */,
-				83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */,
-				83D94A2F1CDD3A7500D41D4D /* Message.swift */,
 				83D94A311CDD442100D41D4D /* MessageStreamTableViewCell.swift */,
+				83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */,
+				83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */,
+				83D94A2F1CDD3A7500D41D4D /* Message.swift */,
+				1236DBF91CE0378A009DEE1F /* EmotoTableViewCell.swift */,
+				1236DBFB1CE037E9009DEE1F /* EmotoTableViewController.swift */,
 			);
 			path = Emoto;
 			sourceTree = "<group>";
@@ -152,11 +158,13 @@
 			files = (
 				83D231B01CD9CCC50033862F /* MessageStreamViewController.swift in Sources */,
 				83D94A2E1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift in Sources */,
+				1236DBFA1CE0378A009DEE1F /* EmotoTableViewCell.swift in Sources */,
 				83D94A301CDD3A7500D41D4D /* Message.swift in Sources */,
 				83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */,
 				127AF75A1CDD53E900910EFB /* CopresenceTableViewCell.swift in Sources */,
 				83D94A321CDD442100D41D4D /* MessageStreamTableViewCell.swift in Sources */,
 				83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */,
+				1236DBFC1CE037E9009DEE1F /* EmotoTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

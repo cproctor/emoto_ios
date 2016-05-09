@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bIb-uf-gVT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -81,10 +80,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="emoto" destination="OHE-dh-vXL" id="LCo-Yd-hzq"/>
-                                    <outlet property="messageText" destination="Ab2-v3-ROl" id="faR-2n-VbB"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -109,36 +104,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oea-MB-H2f">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="fUG-58-PZF"/>
-                                </constraints>
-                                <items>
-                                    <barButtonItem style="plain" id="ce3-VV-cYD">
-                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" id="nKd-gD-T1J">
-                                            <rect key="frame" x="20" y="7" width="217" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                    </barButtonItem>
-                                    <barButtonItem title="Send" style="plain" id="g1V-a9-3ZU">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Vqv-Lw-Fey">
-                                            <rect key="frame" x="247" y="7" width="77" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Send"/>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem title="Emoto" style="plain" id="a3Y-77-3Qh">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jcy-UG-EK2">
-                                            <rect key="frame" x="334" y="7" width="72" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Emoto"/>
-                                        </button>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <view contentMode="top" translatesAutoresizingMaskIntoConstraints="NO" id="VlM-n0-Lgd" userLabel="Copresence Window">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="120"/>
                                 <subviews>
@@ -184,36 +149,65 @@
                                 <rect key="frame" x="0.0" y="119" width="600" height="437"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="75" id="Tox-nx-kZD" userLabel="Message Stream Table View Cell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageStreamTableCell" rowHeight="75" id="Tox-nx-kZD" userLabel="MessageStreamTableCell" customClass="MessageStreamTableViewCell" customModule="Emoto" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="600" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tox-nx-kZD" id="yEg-tL-F6u">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Default Weather Photo" translatesAutoresizingMaskIntoConstraints="NO" id="ZAe-pA-iBM" userLabel="Emoto Image View">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sunset" translatesAutoresizingMaskIntoConstraints="NO" id="ZAe-pA-iBM">
                                                     <rect key="frame" x="0.0" y="-42" width="600" height="128"/>
                                                 </imageView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" editable="NO" text="Hey--how are you?" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k2R-y8-0Ri">
-                                                    <rect key="frame" x="8" y="8" width="302" height="58"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                </textView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkg-Pn-yhR">
+                                                    <rect key="frame" x="18" y="8" width="279" height="58"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.55643284574468088" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstItem="k2R-y8-0Ri" firstAttribute="top" secondItem="yEg-tL-F6u" secondAttribute="topMargin" id="YXX-C8-CjU"/>
-                                                <constraint firstItem="k2R-y8-0Ri" firstAttribute="bottom" secondItem="yEg-tL-F6u" secondAttribute="bottomMargin" id="fD7-fC-t9M"/>
-                                                <constraint firstItem="k2R-y8-0Ri" firstAttribute="leading" secondItem="yEg-tL-F6u" secondAttribute="leadingMargin" id="t9H-AW-pMR"/>
-                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="emoto" destination="ZAe-pA-iBM" id="Xx0-6G-eHO"/>
+                                            <outlet property="messageText" destination="lkg-Pn-yhR" id="PO4-LU-5Id"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oea-MB-H2f">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="fUG-58-PZF"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem style="plain" id="ce3-VV-cYD">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" id="nKd-gD-T1J">
+                                            <rect key="frame" x="20" y="7" width="217" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem title="Send" style="plain" id="g1V-a9-3ZU">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Vqv-Lw-Fey">
+                                            <rect key="frame" x="247" y="7" width="77" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Send"/>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem title="Emoto" style="plain" id="a3Y-77-3Qh">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jcy-UG-EK2">
+                                            <rect key="frame" x="334" y="7" width="72" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Emoto"/>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="RBb-Ej-zvC" firstAttribute="top" secondItem="1MM-nv-NwD" secondAttribute="bottom" id="392-sH-n98"/>
                             <constraint firstItem="1MM-nv-NwD" firstAttribute="leading" secondItem="Ya5-FN-dUm" secondAttribute="leading" id="DmC-ZL-fa3"/>
                             <constraint firstItem="1MM-nv-NwD" firstAttribute="top" secondItem="wx1-TK-Ih6" secondAttribute="bottom" multiplier="100" id="Upe-IZ-WrY"/>
                             <constraint firstItem="VlM-n0-Lgd" firstAttribute="top" secondItem="Ya5-FN-dUm" secondAttribute="top" id="aX1-ss-Jpm"/>
@@ -228,6 +222,7 @@
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="messagesTable" destination="1MM-nv-NwD" id="7eZ-7F-Jk8"/>
                         <outlet property="myTimeLabel" destination="rCk-zO-boS" id="kuG-L3-zUG"/>
                         <outlet property="myWeatherLabel" destination="uyF-Va-1Hx" id="kkA-1m-fgV"/>
                         <outlet property="yourTimeLabel" destination="POk-7d-oXw" id="88u-9T-rph"/>
@@ -236,11 +231,47 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="340" y="469"/>
+            <point key="canvasLocation" x="348" y="-235"/>
+        </scene>
+        <!--Emoto Table View Controller-->
+        <scene sceneID="yUF-ZJ-jhS">
+            <objects>
+                <tableViewController id="bWd-3p-Pd6" customClass="EmotoTableViewController" customModule="Emoto" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="nfU-lg-6Zv">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmotoTableCell" rowHeight="103" id="haw-kE-QBf" userLabel="EmotoTableCell" customClass="EmotoTableViewCell" customModule="Emoto" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="600" height="103"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="haw-kE-QBf" id="boo-7V-gJn">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="102"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Blue Sky" translatesAutoresizingMaskIntoConstraints="NO" id="Ycd-aa-674">
+                                            <rect key="frame" x="0.0" y="-26" width="600" height="102"/>
+                                        </imageView>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="imageChoice" destination="Ycd-aa-674" id="IwP-hr-mke"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="bWd-3p-Pd6" id="JAX-VP-B7i"/>
+                            <outlet property="delegate" destination="bWd-3p-Pd6" id="jKl-ca-pNr"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4jS-OY-thn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1056" y="-1010"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Default Weather Photo" width="1280" height="800"/>
+        <image name="Blue Sky" width="231" height="173"/>
         <image name="Sunset" width="1280" height="800"/>
     </resources>
 </document>

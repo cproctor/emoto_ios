@@ -1,21 +1,16 @@
 //
-//  MessageStreamTableViewCell.swift
+//  EmotoTableViewCell.swift
 //  Emoto
 //
-//  Created by Chris Proctor on 5/6/16.
+//  Created by Graduates on 5/8/16.
 //  Copyright © 2016 Chris Proctor. All rights reserved.
 //
 
 import UIKit
 
-class MessageStreamTableViewCell: UITableViewCell {
+class EmotoTableViewCell: UITableViewCell {
 
-//    @IBOutlet weak var emoto: UIImageView!
-//    @IBOutlet weak var messageText: UILabel!
-    
-    @IBOutlet weak var emoto: UIImageView!
-    @IBOutlet weak var messageText: UILabel!
-    
+    @IBOutlet weak var imageChoice: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

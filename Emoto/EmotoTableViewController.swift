@@ -1,44 +1,25 @@
 //
-//  MessageStreamTableViewController.swift
+//  EmotoTableViewController.swift
 //  Emoto
 //
-//  Created by Chris Proctor on 5/6/16.
+//  Created by Graduates on 5/8/16.
 //  Copyright © 2016 Chris Proctor. All rights reserved.
 //
 
 import UIKit
 
-class MessageStreamTableViewController: UITableViewController {
-    
-    // MARK: Properties
-    var messages = [Message]()
+class EmotoTableViewController: UITableViewController {
+
+    var images = [UIImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        loadSampleMessages()
+        loadSamplePictures()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
-    
-    func loadSampleMessages () {
-        let emoto1 = UIImage(named: "Blue Sky")
-        let emoto2 = UIImage(named: "Stormy")
-        let emoto3 = UIImage(named: "Sunset")
-        
-        let date1 = NSDate()
-        let date2 = NSDate()
-        let date3 = NSDate()
-        
-        let msg1 = Message(text: "Good morning!", emoto: emoto1, author: "chris", timestamp: date1)!
-        let msg2 = Message(text: "I stubbed my toe.", emoto: emoto2, author: "zuz", timestamp: date2)!
-        let msg3 = Message(text: "But I feel better now.", emoto: emoto3, author: "zuz", timestamp: date3)!
-        
-        messages += [msg1, msg2, msg3]
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,41 +30,47 @@ class MessageStreamTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return messages.count
+        return images.count
     }
 
+    func loadSamplePictures () {
+        let emoto1 = UIImage(named: "Blue Sky")
+        let emoto2 = UIImage(named: "Stormy")
+        let emoto3 = UIImage(named: "Sunset")
+        
+        images += [emoto1!, emoto2!, emoto3!]
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cellIdentifier = "MessageTableViewCell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! MessageStreamTableViewCell
+        let cellIdentifier = "EmotoTableCell"
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! EmotoTableViewCell
         
-        let message = messages[indexPath.row]
-        cell.messageText.text = message.text
-        cell.emoto.image = message.emoto
+        let image = images[indexPath.row]
+        cell.imageChoice.image = image
         
         // Configure the cell...
         
         return cell
-        
-    }
-
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let  headerCell = tableView.dequeueReusableCellWithIdentifier("HeaderCell") as! CopresenceTableViewCell
-        
-        headerCell.backgroundColor = UIColor.lightGrayColor()
-        
-        return headerCell
-    }
-
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 103.0
+       
     }
     
+    /*
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+
+        // Configure the cell...
+
+        return cell
+    }
+    */
+
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

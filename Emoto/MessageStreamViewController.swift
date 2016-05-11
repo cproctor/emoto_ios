@@ -16,14 +16,23 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var yourTimeLabel: UILabel!
     @IBOutlet weak var yourWeatherLabel: UILabel!
     @IBOutlet weak var messagesTable: UITableView!
+    @IBOutlet weak var messagesInput: UITextField!
     
     var messages = [Message]()
     var myFormatter: NSDateFormatter?
     var yourFormatter: NSDateFormatter?
     var timer: NSTimer?
     
+    @IBAction func didTapEmotoButton(sender: UIButton) {
+        performSegueWithIdentifier("ChangeEmoto", sender: self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBarHidden = true
+        
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);
         
         myFormatter = NSDateFormatter()
         myFormatter!.dateStyle = .NoStyle
@@ -106,12 +115,39 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         cell.messageText.text = message.text
         cell.emoto.image = message.emoto
         
+        print("printing message: ", message.text)
+        
         // Configure the cell...
         
         return cell
         
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        let row = indexPath.row
+        print(messages[row])
+    }
+    
+//    func keyboardWillShow(sender: NSNotification) {
+//        self.view.frame.origin.y += 150
+//    }
+//    
+//    func keyboardWillHide(sender: NSNotification) {
+//        self.view.frame.origin.y -= 150
+//    }
+    
+    @IBAction func sendMessage(sender: UIButton) {
+        let emoto1 = UIImage(named: "Blue Sky")
+        let date1 = NSDate()
+        let text1 = messagesInput.text!
+        let msg1 = Message(text: text1, emoto: emoto1, author: "chris", timestamp: date1)!
+        messages += [msg1]
+        messagesInput.text = ""
+        messagesTable.reloadData()
+
+    }
     /*
     // MARK: - Navigation
 

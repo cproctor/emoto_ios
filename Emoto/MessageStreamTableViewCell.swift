@@ -9,9 +9,6 @@
 import UIKit
 
 class MessageStreamTableViewCell: UITableViewCell {
-
-//    @IBOutlet weak var emoto: UIImageView!
-//    @IBOutlet weak var messageText: UILabel!
     
     @IBOutlet weak var emoto: UIImageView!
     @IBOutlet weak var messageText: UILabel!

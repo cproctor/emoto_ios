@@ -18,6 +18,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var messagesTable: UITableView!
     @IBOutlet weak var messagesInput: UITextField!
     
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    
     var messages = [Message]()
     var selectedEmoto = UIImage(named: "Sunset")
     var myFormatter: NSDateFormatter?
@@ -32,8 +34,12 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         super.viewDidLoad()
         self.navigationController?.navigationBarHidden = true
         
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessageStreamViewController.keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessageStreamViewController.keyboardWillHide), name: UIKeyboardWillHideNotification, object: nil)
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
         
         myFormatter = NSDateFormatter()
         myFormatter!.dateStyle = .NoStyle
@@ -41,6 +47,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         yourFormatter = NSDateFormatter()
         yourFormatter!.dateStyle = .NoStyle
         yourFormatter!.timeStyle = .ShortStyle
+        
+        messages.removeAll()
         
         updateTimeZones()
         updateWeathers()
@@ -62,8 +70,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     func updateTimeZones() {
         // TODO: We should be receiving timeZone data from the server.
         // For now, we stub it out.
-        myFormatter!.timeZone = NSTimeZone(name: "US/Pacific")!
-        yourFormatter!.timeZone = NSTimeZone(name: "US/Eastern")!
+        myFormatter!.timeZone = NSTimeZone(name: "US/Eastern")!
+        yourFormatter!.timeZone = NSTimeZone(name: "US/Pacific")!
     }
     
     func updateTimes() {
@@ -75,8 +83,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     func updateWeathers() {
         // TODO: We should be receiving weather data from the backend from time to time.
         // For now, we stub it out.
-        myWeatherLabel.text = "Sunny"
-        yourWeatherLabel.text = "Hail"
+        myWeatherLabel.text = "Cloudy"
+        yourWeatherLabel.text = "Sunny"
     }
 
     override func didReceiveMemoryWarning() {
@@ -137,13 +145,15 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
 //        print(messages[row])
 //    }
     
-//    func keyboardWillShow(sender: NSNotification) {
-//        self.view.frame.origin.y += 150
-//    }
-//    
-//    func keyboardWillHide(sender: NSNotification) {
+    func keyboardWillShow(notification: NSNotification) {
 //        self.view.frame.origin.y -= 150
-//    }
+        adjustingHeight(true, notification: notification)
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+//        self.view.frame.origin.y += 150
+        adjustingHeight(false, notification: notification)
+    }
     
     @IBAction func sendMessage(sender: UIButton) {
         let emoto1 = selectedEmoto
@@ -156,6 +166,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
             messagesTable.reloadData()
             saveMessages()
         }
+        view.endEditing(true)
     }
     
     // MARK: NSCoding
@@ -168,6 +179,22 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     
     func loadMessages() -> [Message]? {
         return NSKeyedUnarchiver.unarchiveObjectWithFile(Message.ArchiveURL.path!) as? [Message]
+    }
+    
+    func adjustingHeight(show:Bool, notification:NSNotification) {
+        var userInfo = notification.userInfo!
+        let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+        let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSTimeInterval
+        let changeInHeight = (CGRectGetHeight(keyboardFrame) + 10) * (show ? 1 : -1)
+        UIView.animateWithDuration(animationDurarion, animations: { () -> Void in
+            self.bottomConstraint.constant += changeInHeight
+        })
+        
+    }
+    
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
     
     /*

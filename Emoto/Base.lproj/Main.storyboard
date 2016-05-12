@@ -107,28 +107,31 @@
                             <view contentMode="top" translatesAutoresizingMaskIntoConstraints="NO" id="VlM-n0-Lgd" userLabel="Copresence Window">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="120"/>
                                 <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="copresence_pic" translatesAutoresizingMaskIntoConstraints="NO" id="1fK-nl-09m">
+                                        <rect key="frame" x="-163" y="-11" width="627" height="148"/>
+                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rCk-zO-boS">
                                         <rect key="frame" x="24" y="23" width="66" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="POk-7d-oXw">
                                         <rect key="frame" x="499" y="23" width="77" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Weather" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uyF-Va-1Hx">
                                         <rect key="frame" x="24" y="52" width="93" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Weather" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y2c-ps-VGp">
                                         <rect key="frame" x="472" y="52" width="104" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -159,7 +162,7 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sunset" translatesAutoresizingMaskIntoConstraints="NO" id="ZAe-pA-iBM">
                                                     <rect key="frame" x="0.0" y="-42" width="600" height="128"/>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkg-Pn-yhR">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkg-Pn-yhR">
                                                     <rect key="frame" x="18" y="8" width="279" height="58"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.55643284574468088" colorSpace="calibratedRGB"/>
                                                     <constraints>
@@ -193,27 +196,9 @@
                                     <constraint firstAttribute="height" constant="44" id="fUG-58-PZF"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem style="plain" id="ce3-VV-cYD">
-                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" id="nKd-gD-T1J">
-                                            <rect key="frame" x="20" y="7" width="217" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                    </barButtonItem>
-                                    <barButtonItem title="Send" style="plain" id="g1V-a9-3ZU">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Vqv-Lw-Fey">
-                                            <rect key="frame" x="247" y="7" width="77" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Send"/>
-                                            <connections>
-                                                <action selector="sendMessage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oJy-rZ-jFe"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
                                     <barButtonItem title="Emoto" style="plain" id="a3Y-77-3Qh">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jcy-UG-EK2">
-                                            <rect key="frame" x="334" y="7" width="72" height="30"/>
+                                            <rect key="frame" x="20" y="7" width="45" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Emoto"/>
                                             <connections>
@@ -223,6 +208,24 @@
                                         <connections>
                                             <action selector="didTapEmotoButton:" destination="BYZ-38-t0r" id="gEd-E7-v5p"/>
                                         </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="ce3-VV-cYD">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" id="nKd-gD-T1J">
+                                            <rect key="frame" x="75" y="7" width="195" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem title="Send" style="plain" id="g1V-a9-3ZU">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Vqv-Lw-Fey">
+                                            <rect key="frame" x="280" y="7" width="45" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Send"/>
+                                            <connections>
+                                                <action selector="sendMessage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oJy-rZ-jFe"/>
+                                            </connections>
+                                        </button>
                                     </barButtonItem>
                                 </items>
                             </toolbar>
@@ -244,6 +247,7 @@
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="bottomConstraint" destination="jnQ-F0-aD8" id="MIt-Rz-Qiw"/>
                         <outlet property="messagesInput" destination="nKd-gD-T1J" id="tke-fE-FBC"/>
                         <outlet property="messagesTable" destination="1MM-nv-NwD" id="7eZ-7F-Jk8"/>
                         <outlet property="myTimeLabel" destination="rCk-zO-boS" id="kuG-L3-zUG"/>
@@ -327,8 +331,9 @@
     <resources>
         <image name="Blue Sky" width="231" height="173"/>
         <image name="Sunset" width="1280" height="800"/>
+        <image name="copresence_pic" width="909" height="388"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="GhQ-Z9-3rb"/>
+        <segue reference="dMD-iE-vlF"/>
     </inferredMetricsTieBreakers>
 </document>

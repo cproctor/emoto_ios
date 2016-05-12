@@ -12,6 +12,8 @@ class EmotoTableViewController: UITableViewController {
 
     var images = [UIImage]()
     
+    var selectedEmoto = UIImage(named: "Blue Sky")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadSamplePictures()
@@ -59,6 +61,23 @@ class EmotoTableViewController: UITableViewController {
         
         return cell
        
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let selectedCell:UITableViewCell = tableView.cellForRowAtIndexPath(indexPath)!
+        selectedCell.contentView.backgroundColor = UIColor.redColor()
+        let row = indexPath.row
+        selectedEmoto = images[row]
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+        if (segue.identifier == "SelectEmoto") {
+            let svc = segue.destinationViewController as! MessageStreamViewController
+            
+            svc.selectedEmoto = selectedEmoto!
+            
+        }
     }
     
     /*

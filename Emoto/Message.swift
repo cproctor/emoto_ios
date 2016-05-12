@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Message: NSObject { // Also NSCoding for serialization.
+class Message: NSObject, NSCoding { // Also NSCoding for serialization.
     
     let UNSAVED = -1
 
@@ -19,19 +19,19 @@ class Message: NSObject { // Also NSCoding for serialization.
     var id: Int?
     var timestamp: NSDate
     
-    /*
+
     // MARK: Archiving Paths
     static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
     static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("emoto_messages")
     
     // MARK: Types
     struct PropertyKey {
-        static let nameKey = "name"
+        static let textKey = "text"
         static let emotoKey = "emoto"
         static let authorKey = "author"
-        
+        static let idKey = "id"
+        static let timestampKey = "timestamp"
     }
-    */
     
     // MARK: Initialization
     init?(text: String, emoto: UIImage?, author: String, timestamp: NSDate, id: Int = -1)  {
@@ -49,4 +49,27 @@ class Message: NSObject { // Also NSCoding for serialization.
         }
         print("A message! Huzzah")
     }
+    
+    // MARK: NSCoding
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(text, forKey: PropertyKey.textKey)
+        aCoder.encodeObject(emoto, forKey: PropertyKey.emotoKey)
+        aCoder.encodeObject(author, forKey: PropertyKey.authorKey)
+        aCoder.encodeObject(timestamp, forKey: PropertyKey.timestampKey)
+        aCoder.encodeInteger(id!, forKey: PropertyKey.idKey)
+        
+    }
+    
+    required convenience init?(coder aDecoder: NSCoder) {
+        let text = aDecoder.decodeObjectForKey(PropertyKey.textKey) as! String
+        // Because photo is an optional property of Meal, use conditional cast.
+        let emoto = aDecoder.decodeObjectForKey(PropertyKey.emotoKey) as? UIImage
+        let author = aDecoder.decodeObjectForKey(PropertyKey.authorKey) as? String
+        let timestamp = aDecoder.decodeObjectForKey(PropertyKey.timestampKey) as? NSDate
+        let id = aDecoder.decodeIntegerForKey(PropertyKey.idKey)
+        
+        // Must call designated initializer.
+        self.init(text: text, emoto: emoto, author: author!, timestamp: timestamp!, id: id)
+    }
+    
 }

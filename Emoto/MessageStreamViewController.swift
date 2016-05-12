@@ -19,6 +19,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var messagesInput: UITextField!
     
     var messages = [Message]()
+    var selectedEmoto = UIImage(named: "Sunset")
     var myFormatter: NSDateFormatter?
     var yourFormatter: NSDateFormatter?
     var timer: NSTimer?
@@ -44,7 +45,13 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         updateTimeZones()
         updateWeathers()
         updateTimes()
-        loadSampleMessages()
+        if let savedMessages = loadMessages() {
+            messages += savedMessages
+        }
+        else {
+            // Load the sample data.
+            loadSampleMessages()
+        }
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
         
         self.messagesTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -123,12 +130,12 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
-        let row = indexPath.row
-        print(messages[row])
-    }
+//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+//        
+//        let row = indexPath.row
+//        print(messages[row])
+//    }
     
 //    func keyboardWillShow(sender: NSNotification) {
 //        self.view.frame.origin.y += 150
@@ -139,15 +146,30 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
 //    }
     
     @IBAction func sendMessage(sender: UIButton) {
-        let emoto1 = UIImage(named: "Blue Sky")
+        let emoto1 = selectedEmoto
         let date1 = NSDate()
         let text1 = messagesInput.text!
-        let msg1 = Message(text: text1, emoto: emoto1, author: "chris", timestamp: date1)!
-        messages += [msg1]
-        messagesInput.text = ""
-        messagesTable.reloadData()
-
+        if !text1.isEmpty {
+            let msg1 = Message(text: text1, emoto: emoto1, author: "chris", timestamp: date1)!
+            messages += [msg1]
+            messagesInput.text = ""
+            messagesTable.reloadData()
+            saveMessages()
+        }
     }
+    
+    // MARK: NSCoding
+    func saveMessages() {
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(messages, toFile: Message.ArchiveURL.path!)
+        if !isSuccessfulSave {
+            print("Failed to save messages...")
+        }
+    }
+    
+    func loadMessages() -> [Message]? {
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Message.ArchiveURL.path!) as? [Message]
+    }
+    
     /*
     // MARK: - Navigation
 

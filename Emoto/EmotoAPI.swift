@@ -40,6 +40,27 @@ public class EmotoAPI {
         }
     }
     
+    class func postNewMessageWithSuccess(message: Message, success: (data : Message) -> Void) {
+        let newMessageUrl = NSURL(string: "\(baseURL)/users/\(message.author)/messages/new")!
+        
+        httpPostRequest(newMessageUrl, payload: message.toJSON()!) { (data, error) -> Void in
+            guard data != nil else {
+                print("No data received from server")
+                return
+            }
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
+                if let savedMessage = Message(json: json) {
+                    success(data: savedMessage)
+                } else {
+                    print("Invalid message data returned")
+                }
+            } catch {
+                print("error deserializing JSON: \(error)")
+            }
+        }
+    }
+    
     class func getStatusWithSuccess(username: String, success: (data: [String : UserProfile]) -> Void) {
         print("GET \(username) profile")
         let profileUrl = NSURL(string: "\(baseURL)/users/\(username)/status")!
@@ -62,11 +83,8 @@ public class EmotoAPI {
             } catch {
                 print("error deserializing JSON: \(error)")
             }
-            
         }
-        
     }
-    
     
     // Issues a HTTP GET request, then runs the provided closure with the resulting data or error.
     // The Emoto Backend returns status code 200 or 400.
@@ -86,5 +104,35 @@ public class EmotoAPI {
             }
         }
         loadDataTask.resume()
+    }
+    
+    // Issues a HTTP POST request with the provided JSON payload, then runs the provided closure with the resulting data or error.
+    // The Emoto Backend returns status code 200 or 400.
+    class func httpPostRequest(url: NSURL, payload: JSON, completion:(data: NSData?, error: NSError?) -> Void) {
+        let request = NSMutableURLRequest(URL: url)
+        let session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        do {
+            try request.HTTPBody = NSJSONSerialization.dataWithJSONObject(payload, options: [])
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            let postDataTask = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+                if let responseError = error {
+                    completion(data: nil, error: responseError)
+                } else if let httpResponse = response as? NSHTTPURLResponse {
+                    if httpResponse.statusCode != 200 {
+                        let statusError = NSError(domain:"com.emoto", code:httpResponse.statusCode, userInfo:[NSLocalizedDescriptionKey : "HTTP status code has unexpected value."])
+                        completion(data: nil, error: statusError)
+                    } else {
+                        completion(data: data, error: nil)
+                    }
+                }
+            }
+            postDataTask.resume()
+        } catch {
+            print("POST failed.")
+        }
     }
 }

@@ -196,11 +196,13 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         let date1 = NSDate()
         let text1 = messagesInput.text!
         if !text1.isEmpty {
-            let msg1 = Message(text: text1, emoto: emoto1, author: "chris", timestamp: date1)!
-            messages += [msg1]
+            let msg1 = Message(text: text1, emoto: emoto1, author: self.myProfile!.username, timestamp: date1)!
             messagesInput.text = ""
-            messagesTable.reloadData()
-            saveMessages()
+            EmotoAPI.postNewMessageWithSuccess(msg1) { (savedMessage) -> Void in
+                self.messages += [savedMessage]
+                self.messagesTable.reloadData()
+                self.saveMessages()
+            }
         }
         view.endEditing(true)
     }

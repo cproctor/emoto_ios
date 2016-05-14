@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Message: NSObject, NSCoding, Decodable {
+class Message: NSObject, NSCoding, Glossy {
     
     let UNSAVED = -1
 
@@ -92,5 +92,16 @@ class Message: NSObject, NSCoding, Decodable {
         self.timestamp = timestamp
         
         print("Message loaded from JSON: \(self.text)")
+    }
+    
+    // Mark: Encodable protocol
+    func toJSON() -> JSON? {
+        return jsonify([
+            "id" ~~> self.id,
+            "text" ~~> self.text,
+            "author" ~~> self.author,
+            "emoto" ~~> self.emoto,
+            "created_time" ~~> self.timestamp
+        ])
     }
 }

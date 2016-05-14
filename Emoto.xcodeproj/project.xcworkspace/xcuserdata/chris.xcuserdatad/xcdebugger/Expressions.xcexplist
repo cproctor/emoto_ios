@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "static EmotoAPI.(getMessagesWithSuccess(String, success : (data : [Message]?) -&gt; ()) -&gt; ()).(closure #1):EmotoAPI.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MessageCollection.init(json : [String : AnyObject]) -&gt; MessageCollection?:MessageCollection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "(Builtin.RawPointer)[0].value.instance_type">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

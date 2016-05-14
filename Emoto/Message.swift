@@ -8,11 +8,7 @@
 
 import UIKit
 
-<<<<<<< Updated upstream
-class Message: NSObject, NSCoding { // Also NSCoding for serialization.
-=======
-class Message: NSObject, Decodable { // Also NSCoding for serialization.
->>>>>>> Stashed changes
+class Message: NSObject, NSCoding, Decodable { // Also NSCoding for serialization.
     
     let UNSAVED = -1
 
@@ -81,7 +77,7 @@ class Message: NSObject, Decodable { // Also NSCoding for serialization.
         guard let id: Int = "id" <~~ json else { return nil}
         guard let text: String = "text" <~~ json else { return nil}
         guard let author: String = "author" <~~ json else { return nil}
-        let emoto : UIImage? = nil // TEMP
+        //let emoto : UIImage? = nil // TEMP
         guard let timestampString : String = "created_time" <~~ json else { return nil}
         
         let dateFormatter = NSDateFormatter()

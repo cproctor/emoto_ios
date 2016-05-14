@@ -10,6 +10,14 @@
 		1236DBFA1CE0378A009DEE1F /* EmotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1236DBF91CE0378A009DEE1F /* EmotoTableViewCell.swift */; };
 		1236DBFC1CE037E9009DEE1F /* EmotoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1236DBFB1CE037E9009DEE1F /* EmotoTableViewController.swift */; };
 		127AF75A1CDD53E900910EFB /* CopresenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */; };
+		8300E4511CE4DAD500F4C4BC /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E44A1CE4DAD500F4C4BC /* Decoder.swift */; };
+		8300E4521CE4DAD500F4C4BC /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E44B1CE4DAD500F4C4BC /* Encoder.swift */; };
+		8300E4531CE4DAD500F4C4BC /* ExtensionArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E44C1CE4DAD500F4C4BC /* ExtensionArray.swift */; };
+		8300E4541CE4DAD500F4C4BC /* ExtensionDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E44D1CE4DAD500F4C4BC /* ExtensionDictionary.swift */; };
+		8300E4551CE4DAD500F4C4BC /* Gloss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E44F1CE4DAD500F4C4BC /* Gloss.swift */; };
+		8300E4561CE4DAD500F4C4BC /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E4501CE4DAD500F4C4BC /* Operators.swift */; };
+		8300E4581CE4DAF100F4C4BC /* MessageCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E4571CE4DAF100F4C4BC /* MessageCollection.swift */; };
+		8300E45A1CE4DB8700F4C4BC /* EmotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */; };
 		83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */; };
 		83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */; };
 		83BFAEC21CD1D24D00C9F7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC01CD1D24D00C9F7C0 /* Main.storyboard */; };
@@ -25,6 +33,15 @@
 		1236DBF91CE0378A009DEE1F /* EmotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmotoTableViewCell.swift; sourceTree = "<group>"; };
 		1236DBFB1CE037E9009DEE1F /* EmotoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmotoTableViewController.swift; sourceTree = "<group>"; };
 		127AF7591CDD53E900910EFB /* CopresenceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopresenceTableViewCell.swift; sourceTree = "<group>"; };
+		8300E44A1CE4DAD500F4C4BC /* Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Decoder.swift; path = Gloss/Decoder.swift; sourceTree = "<group>"; };
+		8300E44B1CE4DAD500F4C4BC /* Encoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Encoder.swift; path = Gloss/Encoder.swift; sourceTree = "<group>"; };
+		8300E44C1CE4DAD500F4C4BC /* ExtensionArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExtensionArray.swift; path = Gloss/ExtensionArray.swift; sourceTree = "<group>"; };
+		8300E44D1CE4DAD500F4C4BC /* ExtensionDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExtensionDictionary.swift; path = Gloss/ExtensionDictionary.swift; sourceTree = "<group>"; };
+		8300E44E1CE4DAD500F4C4BC /* Gloss.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gloss.h; path = Gloss/Gloss.h; sourceTree = "<group>"; };
+		8300E44F1CE4DAD500F4C4BC /* Gloss.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Gloss.swift; path = Gloss/Gloss.swift; sourceTree = "<group>"; };
+		8300E4501CE4DAD500F4C4BC /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Operators.swift; path = Gloss/Operators.swift; sourceTree = "<group>"; };
+		8300E4571CE4DAF100F4C4BC /* MessageCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCollection.swift; sourceTree = "<group>"; };
+		8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmotoAPI.swift; sourceTree = "<group>"; };
 		83BFAEB91CD1D24D00C9F7C0 /* Emoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +85,13 @@
 		83BFAEBB1CD1D24D00C9F7C0 /* Emoto */ = {
 			isa = PBXGroup;
 			children = (
+				8300E44A1CE4DAD500F4C4BC /* Decoder.swift */,
+				8300E44B1CE4DAD500F4C4BC /* Encoder.swift */,
+				8300E44C1CE4DAD500F4C4BC /* ExtensionArray.swift */,
+				8300E44D1CE4DAD500F4C4BC /* ExtensionDictionary.swift */,
+				8300E44E1CE4DAD500F4C4BC /* Gloss.h */,
+				8300E44F1CE4DAD500F4C4BC /* Gloss.swift */,
+				8300E4501CE4DAD500F4C4BC /* Operators.swift */,
 				83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */,
 				83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */,
 				83BFAEC01CD1D24D00C9F7C0 /* Main.storyboard */,
@@ -79,8 +103,10 @@
 				83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */,
 				83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */,
 				83D94A2F1CDD3A7500D41D4D /* Message.swift */,
+				8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */,
 				1236DBF91CE0378A009DEE1F /* EmotoTableViewCell.swift */,
 				1236DBFB1CE037E9009DEE1F /* EmotoTableViewController.swift */,
+				8300E4571CE4DAF100F4C4BC /* MessageCollection.swift */,
 			);
 			path = Emoto;
 			sourceTree = "<group>";
@@ -160,12 +186,20 @@
 				83D231B01CD9CCC50033862F /* MessageStreamViewController.swift in Sources */,
 				83D94A2E1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift in Sources */,
 				1236DBFA1CE0378A009DEE1F /* EmotoTableViewCell.swift in Sources */,
+				8300E4581CE4DAF100F4C4BC /* MessageCollection.swift in Sources */,
 				83D94A301CDD3A7500D41D4D /* Message.swift in Sources */,
 				83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */,
+				8300E4541CE4DAD500F4C4BC /* ExtensionDictionary.swift in Sources */,
 				127AF75A1CDD53E900910EFB /* CopresenceTableViewCell.swift in Sources */,
 				83D94A321CDD442100D41D4D /* MessageStreamTableViewCell.swift in Sources */,
+				8300E4551CE4DAD500F4C4BC /* Gloss.swift in Sources */,
 				83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */,
+				8300E45A1CE4DB8700F4C4BC /* EmotoAPI.swift in Sources */,
+				8300E4511CE4DAD500F4C4BC /* Decoder.swift in Sources */,
+				8300E4561CE4DAD500F4C4BC /* Operators.swift in Sources */,
+				8300E4521CE4DAD500F4C4BC /* Encoder.swift in Sources */,
 				1236DBFC1CE037E9009DEE1F /* EmotoTableViewController.swift in Sources */,
+				8300E4531CE4DAD500F4C4BC /* ExtensionArray.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

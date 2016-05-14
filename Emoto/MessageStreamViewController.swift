@@ -26,6 +26,16 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     var yourFormatter: NSDateFormatter?
     var timer: NSTimer?
     
+    // Refreshes the table view with new content
+    // See: https://www.andrewcbancroft.com/2015/03/17/basics-of-pull-to-refresh-for-swift-developers/
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
+        
+        return refreshControl
+    }()
+    
+    
     @IBAction func didTapEmotoButton(sender: UIButton) {
         performSegueWithIdentifier("ChangeEmoto", sender: self)
     }
@@ -53,16 +63,13 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         updateTimeZones()
         updateWeathers()
         updateTimes()
-        if let savedMessages = loadMessages() {
-            messages += savedMessages
-        }
-        else {
-            // Load the sample data.
-            loadSampleMessages()
-        }
+        
+        loadMessages("chris")
+        
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
         
         self.messagesTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.messagesTable.addSubview(self.refreshControl)
         messagesTable.delegate = self
         messagesTable.dataSource = self
     }
@@ -86,10 +93,26 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         myWeatherLabel.text = "Cloudy"
         yourWeatherLabel.text = "Sunny"
     }
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        // Do some reloading of data and update the table view's data source
+        // Fetch more objects from a web service, for example...
+        
+        // Simply adding an object to the data source for this example
+        self.messagesTable.reloadData()
+        refreshControl.endRefreshing()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func loadMessages(username: String) {
+        EmotoAPI.getMessagesWithSuccess(username) { (msg) -> Void in
+            self.messages += msg!
+            self.messagesTable.reloadData()
+        }
     }
     
     func loadSampleMessages () {

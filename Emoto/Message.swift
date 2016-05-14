@@ -8,7 +8,11 @@
 
 import UIKit
 
+<<<<<<< Updated upstream
 class Message: NSObject, NSCoding { // Also NSCoding for serialization.
+=======
+class Message: NSObject, Decodable { // Also NSCoding for serialization.
+>>>>>>> Stashed changes
     
     let UNSAVED = -1
 
@@ -72,4 +76,26 @@ class Message: NSObject, NSCoding { // Also NSCoding for serialization.
         self.init(text: text, emoto: emoto, author: author!, timestamp: timestamp!, id: id)
     }
     
+    // MARK: Decodable protocol
+    required init?(json: JSON) {
+        guard let id: Int = "id" <~~ json else { return nil}
+        guard let text: String = "text" <~~ json else { return nil}
+        guard let author: String = "author" <~~ json else { return nil}
+        let emoto : UIImage? = nil // TEMP
+        guard let timestampString : String = "created_time" <~~ json else { return nil}
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        
+        self.id = id
+        self.text = text
+        self.author = author
+        self.emoto = UIImage(named: "Sunset")
+        
+        let timestamp : NSDate! = dateFormatter.dateFromString(timestampString)!
+        self.timestamp = timestamp
+        
+        print("Message loaded from JSON: \(self.text)")
+    }
 }

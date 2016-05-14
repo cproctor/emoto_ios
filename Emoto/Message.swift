@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Message: NSObject, NSCoding, Decodable { // Also NSCoding for serialization.
+class Message: NSObject, NSCoding, Decodable {
     
     let UNSAVED = -1
 
@@ -47,7 +47,6 @@ class Message: NSObject, NSCoding, Decodable { // Also NSCoding for serializatio
         if text.isEmpty || author.isEmpty {
             return nil
         }
-        print("A message! Huzzah")
     }
     
     // MARK: NSCoding

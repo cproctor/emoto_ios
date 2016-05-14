@@ -21,6 +21,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
     var messages = [Message]()
+    var myProfile: UserProfile?
+    var yourProfile: UserProfile?
     var selectedEmoto = UIImage(named: "Sunset")
     var myFormatter: NSDateFormatter?
     var yourFormatter: NSDateFormatter?
@@ -64,10 +66,14 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         updateWeathers()
         updateTimes()
         
-        loadMessages("chris")
+        // Sync with the server. Shall we put this on a timer?
+        fetchMessagesFromServer("chris")
+        fetchProfilesFromServer("chris")
         
+        // Set a timer to update the times in the copresence window
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
         
+        // Control the table view subclass
         self.messagesTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.messagesTable.addSubview(self.refreshControl)
         messagesTable.delegate = self
@@ -75,10 +81,10 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func updateTimeZones() {
-        // TODO: We should be receiving timeZone data from the server.
-        // For now, we stub it out.
-        myFormatter!.timeZone = NSTimeZone(name: "US/Eastern")!
-        yourFormatter!.timeZone = NSTimeZone(name: "US/Pacific")!
+        guard myProfile != nil else { return }
+        myFormatter!.timeZone = NSTimeZone(name: myProfile!.timeZone)!
+        guard yourProfile != nil else { return }
+        yourFormatter!.timeZone = NSTimeZone(name: yourProfile!.timeZone)!
     }
     
     func updateTimes() {
@@ -88,17 +94,13 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func updateWeathers() {
-        // TODO: We should be receiving weather data from the backend from time to time.
-        // For now, we stub it out.
-        myWeatherLabel.text = "Cloudy"
-        yourWeatherLabel.text = "Sunny"
+        guard myProfile != nil else { return }
+        myWeatherLabel.text = myProfile!.weather
+        guard yourProfile != nil else { return }
+        yourWeatherLabel.text = yourProfile!.weather
     }
     
     func handleRefresh(refreshControl: UIRefreshControl) {
-        // Do some reloading of data and update the table view's data source
-        // Fetch more objects from a web service, for example...
-        
-        // Simply adding an object to the data source for this example
         self.messagesTable.reloadData()
         refreshControl.endRefreshing()
     }
@@ -108,10 +110,22 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         // Dispose of any resources that can be recreated.
     }
     
-    func loadMessages(username: String) {
+    func fetchMessagesFromServer(username: String) {
         EmotoAPI.getMessagesWithSuccess(username) { (msg) -> Void in
             self.messages += msg!
             self.messagesTable.reloadData()
+        }
+    }
+    func fetchProfilesFromServer(username: String) {
+        EmotoAPI.getStatusWithSuccess(username) { (profiles) -> Void in
+            if let myProfile = profiles["self"] {
+                self.myProfile = myProfile
+            }
+            if let yourProfile = profiles["partner"] {
+                self.yourProfile = yourProfile
+            }
+            self.updateTimeZones()
+            self.updateWeathers()
         }
     }
     
@@ -129,7 +143,6 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         let msg3 = Message(text: "But I feel better now.", emoto: emoto3, author: "zuz", timestamp: date3)!
         
         messages += [msg1, msg2, msg3]
-        
     }
     
     

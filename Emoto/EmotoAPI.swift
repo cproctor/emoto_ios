@@ -15,7 +15,7 @@ public class EmotoAPI {
     }
     
     class func getMessagesWithSuccess(username:String, success:(data: [Message]?) -> Void) {
-        print("GET Messages")
+        print("GET \(username) messages")
         let messagesURL = NSURL(string: "\(baseURL)/users/\(username)/messages")!
         
         httpGetRequest(messagesURL) {(data, error) -> Void in
@@ -23,7 +23,6 @@ public class EmotoAPI {
                 print("No data received from server")
                 return
             }
-            
             do {
                 var messages = [Message]()
                 let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
@@ -36,9 +35,36 @@ public class EmotoAPI {
                 }
                 success(data: messages)
             } catch {
-                print("error serializing JSON: \(error)")
+                print("error deserializing JSON: \(error)")
             }
         }
+    }
+    
+    class func getStatusWithSuccess(username: String, success: (data: [String : UserProfile]) -> Void) {
+        print("GET \(username) profile")
+        let profileUrl = NSURL(string: "\(baseURL)/users/\(username)/status")!
+        
+        httpGetRequest(profileUrl) {(data, error) -> Void in
+            guard data != nil else {
+                print("No data received from server")
+                return
+            }
+            do {
+                var profiles = [String: UserProfile]()
+                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
+                if let myProfile : UserProfile = "self" <~~ json {
+                    profiles["self"] = myProfile
+                }
+                if let partnerProfile : UserProfile = "partner" <~~ json {
+                    profiles["partner"] = partnerProfile
+                }
+                success(data: profiles)
+            } catch {
+                print("error deserializing JSON: \(error)")
+            }
+            
+        }
+        
     }
     
     

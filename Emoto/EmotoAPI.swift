@@ -11,7 +11,61 @@ let baseURL = "http://104.131.45.220/api/v1"
 
 public class EmotoAPI {
     
-    class func postSignup(username:String) {
+    class func postSignupWithCompletion(username:String, latitude: Float, longitude: Float, completion: (data: UserProfile?, error: NSError?) -> Void) {
+        print("POST \(username) signup")
+        let signupURL = NSURL(string: "\(baseURL)/users/new")!
+        let params = [
+            "username": username,
+            "latitude": latitude,
+            "longitude": longitude
+        ]
+        httpPostRequest(signupURL, payload: params as! JSON) { (data, error) -> Void in
+            guard data != nil else {
+                completion(data: nil, error: err("No data received from server"))
+                return
+            }
+            guard error == nil else {
+                completion(data: nil, error: error)
+                return
+            }
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
+                if let profile = UserProfile(json: json) {
+                    completion(data: profile, error: nil)
+                } else {
+                    completion(data: nil, error: err("Invalid profile data returned"))
+                }
+            } catch {
+                completion(data: nil, error: err("error deserializing JSON: \(error)"))
+            }
+        }
+    }
+    
+    class func postUpdateLocationWithSuccess(username:String, latitude: Float, longitude: Float, success: (data: UserProfile) -> Void) {
+        print("POST \(username) update location")
+        let signupURL = NSURL(string: "\(baseURL)/users/location")!
+        let params = [
+            "username": username,
+            "latitude": latitude,
+            "longitude": longitude
+        ]
+        httpPostRequest(signupURL, payload: params as! JSON) { (data, error) -> Void in
+            guard data != nil else {
+                print("No data received from server")
+                return
+            }
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
+                if let profile = UserProfile(json: json) {
+                    success(data: profile)
+                } else {
+                    print("Invalid profile data returned")
+                }
+            } catch {
+                print("error deserializing JSON: \(error)")
+            }
+        }
+
     }
     
     class func getMessagesWithSuccess(username:String, success:(data: [Message]?) -> Void) {
@@ -84,6 +138,11 @@ public class EmotoAPI {
                 print("error deserializing JSON: \(error)")
             }
         }
+    }
+    
+    class func err(description: String) -> NSError {
+        print("Error: \(description)")
+        return NSError(domain:"com.emoto", code: 400, userInfo:[NSLocalizedDescriptionKey : description])
     }
     
     // Issues a HTTP GET request, then runs the provided closure with the resulting data or error.

@@ -69,6 +69,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         updateTimes()
         
         // Sync with the server. Shall we put this on a timer?
+        // Profile should be saved in user defaults, so we always know who's here.
         fetchProfilesFromServer("chris")
         fetchMessagesFromServer("chris")
         
@@ -174,10 +175,17 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cellIdentifier = "MessageStreamTableCell"
+        let message = messages[indexPath.row]
+        var cellIdentifier : String
+        if myProfile!.username == message.author {
+            cellIdentifier = "MessageStreamTableCellMine"
+        }
+        else {
+            cellIdentifier = "MessageStreamTableCellYours"
+        }
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! MessageStreamTableViewCell
         
-        let message = messages[indexPath.row]
+        
         cell.messageText.text = message.text
         if message.emoto != nil {
             cell.emoto.image = message.emoto!.image

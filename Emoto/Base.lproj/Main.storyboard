@@ -82,8 +82,44 @@
                                 <rect key="frame" x="0.0" y="163" width="600" height="393"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageStreamTableCell" rowHeight="75" id="Tox-nx-kZD" userLabel="MessageStreamTableCell" customClass="MessageStreamTableViewCell" customModule="Emoto" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageStreamTableCellMine" rowHeight="75" id="CTq-jc-c6Z" userLabel="MessageStreamTableCellMine" customClass="MessageStreamTableViewCell" customModule="Emoto" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="600" height="75"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CTq-jc-c6Z" id="7xv-rs-yAf">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="74"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sunset" translatesAutoresizingMaskIntoConstraints="NO" id="963-VT-Ghc">
+                                                    <rect key="frame" x="0.0" y="-42" width="600" height="128"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9SI-gw-Xd1">
+                                                    <rect key="frame" x="18" y="8" width="279" height="58"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.55643284569999996" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="279" id="fgJ-Eq-OTD"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="9SI-gw-Xd1" firstAttribute="top" secondItem="7xv-rs-yAf" secondAttribute="topMargin" id="0iF-Kt-r6p"/>
+                                                <constraint firstItem="9SI-gw-Xd1" firstAttribute="leading" secondItem="7xv-rs-yAf" secondAttribute="leadingMargin" constant="10" id="GOc-sh-x2g"/>
+                                                <constraint firstItem="963-VT-Ghc" firstAttribute="top" secondItem="7xv-rs-yAf" secondAttribute="topMargin" constant="-50" id="UgM-yC-l7E"/>
+                                                <constraint firstAttribute="trailing" secondItem="963-VT-Ghc" secondAttribute="trailing" id="cGV-34-RG2"/>
+                                                <constraint firstItem="9SI-gw-Xd1" firstAttribute="bottom" secondItem="7xv-rs-yAf" secondAttribute="bottomMargin" id="cIz-Fg-8nz"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="963-VT-Ghc" secondAttribute="bottom" constant="-20" id="l9I-tg-r4F"/>
+                                                <constraint firstItem="963-VT-Ghc" firstAttribute="leading" secondItem="7xv-rs-yAf" secondAttribute="leading" id="oxX-3c-0Al"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="emoto" destination="963-VT-Ghc" id="2sc-dY-fTj"/>
+                                            <outlet property="messageText" destination="9SI-gw-Xd1" id="f5M-SI-adC"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageStreamTableCellYours" rowHeight="75" id="Tox-nx-kZD" userLabel="MessageStreamTableCellYours" customClass="MessageStreamTableViewCell" customModule="Emoto" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="103" width="600" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tox-nx-kZD" id="yEg-tL-F6u">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="74"/>
@@ -92,8 +128,8 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sunset" translatesAutoresizingMaskIntoConstraints="NO" id="ZAe-pA-iBM">
                                                     <rect key="frame" x="0.0" y="-42" width="600" height="128"/>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkg-Pn-yhR">
-                                                    <rect key="frame" x="18" y="8" width="279" height="58"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkg-Pn-yhR">
+                                                    <rect key="frame" x="303" y="8" width="279" height="58"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.55643284574468088" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="279" id="uB7-E5-l9E"/>
@@ -104,13 +140,13 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="lkg-Pn-yhR" firstAttribute="leading" secondItem="yEg-tL-F6u" secondAttribute="leadingMargin" constant="10" id="76I-eL-IWN"/>
                                                 <constraint firstItem="lkg-Pn-yhR" firstAttribute="top" secondItem="yEg-tL-F6u" secondAttribute="topMargin" id="NAh-pm-mIA"/>
                                                 <constraint firstItem="ZAe-pA-iBM" firstAttribute="top" secondItem="yEg-tL-F6u" secondAttribute="topMargin" constant="-50" id="XiR-96-Cm4"/>
                                                 <constraint firstItem="lkg-Pn-yhR" firstAttribute="bottom" secondItem="yEg-tL-F6u" secondAttribute="bottomMargin" id="YnA-Js-cjD"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="ZAe-pA-iBM" secondAttribute="bottom" constant="-20" id="biI-J9-k9P"/>
                                                 <constraint firstItem="ZAe-pA-iBM" firstAttribute="leading" secondItem="yEg-tL-F6u" secondAttribute="leading" id="pgV-Yo-2cA"/>
                                                 <constraint firstAttribute="trailing" secondItem="ZAe-pA-iBM" secondAttribute="trailing" id="ppd-1I-la7"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="lkg-Pn-yhR" secondAttribute="trailing" constant="10" id="zXg-Kw-usb"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

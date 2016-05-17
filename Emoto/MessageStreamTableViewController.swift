@@ -34,9 +34,9 @@ class MessageStreamTableViewController: UITableViewController {
     }
     
     func loadSampleMessages () {
-        let emoto1 = UIImage(named: "Blue Sky")
-        let emoto2 = UIImage(named: "Stormy")
-        let emoto3 = UIImage(named: "Sunset")
+        let emoto1 = Emoto(name: "Peaceful", image: UIImage(named: "Blue Sky"), imageUrl: nil, id: -2)
+        let emoto2 = Emoto(name: "Stormy", image: UIImage(named: "Stormy"), imageUrl: nil, id: -3)
+        let emoto3 = Emoto(name: "Awestruck", image: UIImage(named: "Sunset"), imageUrl: nil, id: -4)
         
         let date1 = NSDate()
         let date2 = NSDate()
@@ -73,7 +73,7 @@ class MessageStreamTableViewController: UITableViewController {
         
         let message = messages[indexPath.row]
         cell.messageText.text = message.text
-        cell.emoto.image = message.emoto
+        cell.emoto.image = message.emoto!.image
         
         // Configure the cell...
         

@@ -11,8 +11,9 @@ import UIKit
 class EmotoTableViewController: UITableViewController {
 
     var images = [UIImage]()
+    var emotos = [Emoto]()
     
-    var selectedEmoto = UIImage(named: "Blue Sky")
+    var selectedEmoto : Emoto? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +39,14 @@ class EmotoTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return images.count
+        return emotos.count
+    }
+    
+    func fetchEmotosFromServer() {
+        EmotoAPI.getEmotosWithCompletion() { (emotos, error) -> Void in
+            self.emotos = emotos!
+            self.selectedEmoto = emotos![0]
+        }
     }
 
     func loadSamplePictures () {
@@ -54,9 +62,10 @@ class EmotoTableViewController: UITableViewController {
         let cellIdentifier = "EmotoTableCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! EmotoTableViewCell
         
-        let image = images[indexPath.row]
-        cell.imageChoice.image = image
+        let emoto = emotos[indexPath.row]
+        cell.imageChoice.image = emoto.image
         
+        // Could put emoto name here too.
         // Configure the cell...
         
         return cell
@@ -68,7 +77,7 @@ class EmotoTableViewController: UITableViewController {
         let selectedCell:UITableViewCell = tableView.cellForRowAtIndexPath(indexPath)!
         selectedCell.contentView.backgroundColor = UIColor.redColor()
         let row = indexPath.row
-        selectedEmoto = images[row]
+        selectedEmoto = emotos[row]
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {

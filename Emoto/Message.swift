@@ -14,7 +14,7 @@ class Message: NSObject, NSCoding, Glossy {
 
     // MARK: Properties
     var text: String
-    var emoto: UIImage?
+    var emoto: Emoto?
     var author: String
     var id: Int?
     var timestamp: NSDate
@@ -34,7 +34,7 @@ class Message: NSObject, NSCoding, Glossy {
     }
     
     // MARK: Initialization
-    init?(text: String, emoto: UIImage?, author: String, timestamp: NSDate, id: Int = -1)  {
+    init?(text: String, emoto: Emoto?, author: String, timestamp: NSDate, id: Int = -1)  {
         self.text = text
         self.emoto = emoto
         self.author = author
@@ -62,7 +62,7 @@ class Message: NSObject, NSCoding, Glossy {
     required convenience init?(coder aDecoder: NSCoder) {
         let text = aDecoder.decodeObjectForKey(PropertyKey.textKey) as! String
         // Because photo is an optional property of Meal, use conditional cast.
-        let emoto = aDecoder.decodeObjectForKey(PropertyKey.emotoKey) as? UIImage
+        let emoto = aDecoder.decodeObjectForKey(PropertyKey.emotoKey) as? Emoto
         let author = aDecoder.decodeObjectForKey(PropertyKey.authorKey) as? String
         let timestamp = aDecoder.decodeObjectForKey(PropertyKey.timestampKey) as? NSDate
         let id = aDecoder.decodeIntegerForKey(PropertyKey.idKey)
@@ -79,6 +79,12 @@ class Message: NSObject, NSCoding, Glossy {
         //let emoto : UIImage? = nil // TEMP
         guard let timestampString : String = "created_time" <~~ json else { return nil}
         
+        if let emotoJson = json["emoto"] as? JSON {
+            if let emoto = Emoto(json: emotoJson) {
+                self.emoto = emoto
+            }
+        }
+        
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
@@ -86,7 +92,6 @@ class Message: NSObject, NSCoding, Glossy {
         self.id = id
         self.text = text
         self.author = author
-        self.emoto = UIImage(named: "Sunset")
         
         let timestamp : NSDate! = dateFormatter.dateFromString(timestampString)!
         self.timestamp = timestamp

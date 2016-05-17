@@ -19,6 +19,7 @@
 		8300E4581CE4DAF100F4C4BC /* MessageCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E4571CE4DAF100F4C4BC /* MessageCollection.swift */; };
 		8300E45A1CE4DB8700F4C4BC /* EmotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */; };
 		8313E0C71CE78FD900304339 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8313E0C61CE78FD900304339 /* UserProfile.swift */; };
+		83213B0F1CEAAF4300430F70 /* Emoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83213B0E1CEAAF4300430F70 /* Emoto.swift */; };
 		83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */; };
 		83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */; };
 		83BFAEC21CD1D24D00C9F7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC01CD1D24D00C9F7C0 /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 		8300E4571CE4DAF100F4C4BC /* MessageCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCollection.swift; sourceTree = "<group>"; };
 		8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmotoAPI.swift; sourceTree = "<group>"; };
 		8313E0C61CE78FD900304339 /* UserProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		83213B0E1CEAAF4300430F70 /* Emoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emoto.swift; sourceTree = "<group>"; };
 		83BFAEB91CD1D24D00C9F7C0 /* Emoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				83D94A311CDD442100D41D4D /* MessageStreamTableViewCell.swift */,
 				83D94A2D1CDD3A2C00D41D4D /* MessageStreamTableViewController.swift */,
 				83D231AF1CD9CCC50033862F /* MessageStreamViewController.swift */,
+				83213B0E1CEAAF4300430F70 /* Emoto.swift */,
 				83D94A2F1CDD3A7500D41D4D /* Message.swift */,
 				8313E0C61CE78FD900304339 /* UserProfile.swift */,
 				8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */,
@@ -194,6 +197,7 @@
 				8313E0C71CE78FD900304339 /* UserProfile.swift in Sources */,
 				83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */,
 				8300E4541CE4DAD500F4C4BC /* ExtensionDictionary.swift in Sources */,
+				83213B0F1CEAAF4300430F70 /* Emoto.swift in Sources */,
 				127AF75A1CDD53E900910EFB /* CopresenceTableViewCell.swift in Sources */,
 				83D94A321CDD442100D41D4D /* MessageStreamTableViewCell.swift in Sources */,
 				8300E4551CE4DAD500F4C4BC /* Gloss.swift in Sources */,

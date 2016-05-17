@@ -129,8 +129,27 @@ public class EmotoAPI {
             }
         }
     }
+    
+    class func getEmotosWithCompletion(completion: (emotos: [Emoto]?, error: NSError?) -> Void) {
+        httpJsonGetRequest(NSURL(string: "\(baseURL)/emotos")!) { (json, error) -> Void in
+            guard error == nil else { completion(emotos: nil, error: error); return }
+            var emotos = [Emoto]()
+            if let emotosJson = json!["emotos"] as? [JSON] {
+                for emotoJson in emotosJson {
+                    let emoto = Emoto(json: emotoJson)
+                    emotos.append(emoto!)
+                }
+                completion(emotos: emotos, error: nil)
+            }
+            else {
+                completion(emotos: nil, error: err("Invalid JSON returned for emotos."))
+            }
+        }
+    }
 
-    // HELPERS
+    // =============
+    // Mark: HELPERS
+    // =============
     
     // Shortcut to generate an appropriate NSError
     class func err(description: String) -> NSError {

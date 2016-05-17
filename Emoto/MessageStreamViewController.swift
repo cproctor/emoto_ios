@@ -111,17 +111,19 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func fetchMessagesFromServer(username: String) {
-        EmotoAPI.getMessagesWithSuccess(username) { (msg) -> Void in
+        EmotoAPI.getMessagesWithCompletion(username) { (msg, error) -> Void in
+            // TODO: Handle error
             self.messages += msg!
             self.messagesTable.reloadData()
         }
     }
     func fetchProfilesFromServer(username: String) {
-        EmotoAPI.getStatusWithSuccess(username) { (profiles) -> Void in
-            if let myProfile = profiles["self"] {
+        EmotoAPI.getProfileWithCompletion(username) { (profiles, error) -> Void in
+            // TODO: Handle error
+            if let myProfile = profiles!["self"] {
                 self.myProfile = myProfile
             }
-            if let yourProfile = profiles["partner"] {
+            if let yourProfile = profiles!["partner"] {
                 self.yourProfile = yourProfile
             }
             self.updateTimeZones()
@@ -198,8 +200,9 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         if !text1.isEmpty {
             let msg1 = Message(text: text1, emoto: emoto1, author: self.myProfile!.username, timestamp: date1)!
             messagesInput.text = ""
-            EmotoAPI.postNewMessageWithSuccess(msg1) { (savedMessage) -> Void in
-                self.messages += [savedMessage]
+            EmotoAPI.postNewMessageWithCompletion(msg1) { (savedMessage, error) -> Void in
+                // TODO: Handle error
+                self.messages += [savedMessage!]
                 self.messagesTable.reloadData()
                 self.saveMessages()
             }

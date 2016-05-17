@@ -1,6 +1,8 @@
 //
 //  EmotoAPI.swift
 //  Emoto
+//  Provides methods for accessing backend API calls. Each method should be invoked with a closure 
+//  with two arguments: the optional data type returned on success, and an optional error.
 //
 //  Created by Chris Proctor on 5/10/16.
 //  Copyright © 2016 Chris Proctor. All rights reserved.
@@ -11,139 +13,175 @@ let baseURL = "http://104.131.45.220/api/v1"
 
 public class EmotoAPI {
     
-    class func postSignupWithCompletion(username:String, latitude: Float, longitude: Float, completion: (data: UserProfile?, error: NSError?) -> Void) {
-        print("POST \(username) signup")
+    class func postSignupWithCompletion(username:String, latitude: Float, longitude: Float, completion: (profile: UserProfile?, error: NSError?) -> Void) {
         let signupURL = NSURL(string: "\(baseURL)/users/new")!
         let params = [
             "username": username,
             "latitude": latitude,
             "longitude": longitude
         ]
-        httpPostRequest(signupURL, payload: params as! JSON) { (data, error) -> Void in
-            guard data != nil else {
-                completion(data: nil, error: err("No data received from server"))
-                return
-            }
-            guard error == nil else {
-                completion(data: nil, error: error)
-                return
-            }
-            do {
-                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
-                if let profile = UserProfile(json: json) {
-                    completion(data: profile, error: nil)
-                } else {
-                    completion(data: nil, error: err("Invalid profile data returned"))
-                }
-            } catch {
-                completion(data: nil, error: err("error deserializing JSON: \(error)"))
+        httpJsonPostRequest(signupURL, payload: params as! JSON) { (json, error) -> Void in
+            guard error == nil else { completion(profile: nil, error: error); return }
+            if let profile = UserProfile(json: json!) {
+                completion(profile: profile, error: nil)
+            } else {
+                completion(profile: nil, error: err("Invalid profile data returned"))
             }
         }
     }
     
-    class func postUpdateLocationWithSuccess(username:String, latitude: Float, longitude: Float, success: (data: UserProfile) -> Void) {
-        print("POST \(username) update location")
+    class func postUpdateLocationWithCompletion(username:String, latitude: Float, longitude: Float, completion: (profile: UserProfile?, error: NSError?) -> Void) {
         let signupURL = NSURL(string: "\(baseURL)/users/location")!
         let params = [
             "username": username,
             "latitude": latitude,
             "longitude": longitude
         ]
-        httpPostRequest(signupURL, payload: params as! JSON) { (data, error) -> Void in
-            guard data != nil else {
-                print("No data received from server")
-                return
-            }
-            do {
-                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
-                if let profile = UserProfile(json: json) {
-                    success(data: profile)
-                } else {
-                    print("Invalid profile data returned")
-                }
-            } catch {
-                print("error deserializing JSON: \(error)")
-            }
-        }
-
-    }
-    
-    class func getMessagesWithSuccess(username:String, success:(data: [Message]?) -> Void) {
-        print("GET \(username) messages")
-        let messagesURL = NSURL(string: "\(baseURL)/users/\(username)/messages")!
-        
-        httpGetRequest(messagesURL) {(data, error) -> Void in
-            guard data != nil else {
-                print("No data received from server")
-                return
-            }
-            do {
-                var messages = [Message]()
-                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
-                
-                if let messagesJson = json["messages"] as? [[String: AnyObject]] {
-                    for messageJson in messagesJson {
-                        let message = Message(json: messageJson)
-                        messages.append(message!)
-                    }
-                }
-                success(data: messages)
-            } catch {
-                print("error deserializing JSON: \(error)")
+        httpJsonPostRequest(signupURL, payload: params as! JSON) { (json, error) -> Void in
+            guard error == nil else { completion(profile: nil, error: error); return }
+            if let profile = UserProfile(json: json!) {
+                completion(profile: profile, error: nil)
+            } else {
+                completion(profile: nil, error: err("Invalid profile data returned"))
             }
         }
     }
     
-    class func postNewMessageWithSuccess(message: Message, success: (data : Message) -> Void) {
+    class func getMessagesWithCompletion(username:String, completion:(messages: [Message]?, error: NSError?) -> Void) {
+        httpJsonGetRequest(NSURL(string: "\(baseURL)/users/\(username)/messages")!) { (json, error) -> Void in
+            guard error == nil else { completion(messages: nil, error: error); return }
+            var messages = [Message]()
+            if let messagesJson = json!["messages"] as? [JSON] {
+                for messageJson in messagesJson {
+                    let message = Message(json: messageJson)
+                    messages.append(message!)
+                }
+                completion(messages: messages, error: nil)
+            }
+            else {
+                completion(messages: nil, error: err("Invalid JSON returned for messages."))
+            }
+        }
+    }
+    
+    class func postNewMessageWithCompletion(message: Message, completion: (message : Message?, error: NSError?) -> Void) {
         let newMessageUrl = NSURL(string: "\(baseURL)/users/\(message.author)/messages/new")!
-        
-        httpPostRequest(newMessageUrl, payload: message.toJSON()!) { (data, error) -> Void in
-            guard data != nil else {
-                print("No data received from server")
-                return
-            }
-            do {
-                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
-                if let savedMessage = Message(json: json) {
-                    success(data: savedMessage)
-                } else {
-                    print("Invalid message data returned")
-                }
-            } catch {
-                print("error deserializing JSON: \(error)")
+        httpJsonPostRequest(newMessageUrl, payload: message.toJSON()!) { (json, error) -> Void in
+            guard error == nil else { completion(message: nil, error: error); return }
+            if let savedMessage = Message(json: json!) {
+                completion(message: savedMessage, error: nil)
+            } else {
+                completion(message: nil, error: err("Invalid JSON returned for messages."))
             }
         }
     }
     
-    class func getStatusWithSuccess(username: String, success: (data: [String : UserProfile]) -> Void) {
-        print("GET \(username) profile")
-        let profileUrl = NSURL(string: "\(baseURL)/users/\(username)/status")!
-        
-        httpGetRequest(profileUrl) {(data, error) -> Void in
-            guard data != nil else {
-                print("No data received from server")
-                return
-            }
-            do {
-                var profiles = [String: UserProfile]()
-                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
-                if let myProfile : UserProfile = "self" <~~ json {
-                    profiles["self"] = myProfile
-                }
-                if let partnerProfile : UserProfile = "partner" <~~ json {
+    // When successful, returns a dictionary of profiles, possibly including keys for "self" and "partner"
+    class func getProfileWithCompletion(username: String, completion: (profiles: [String : UserProfile]?, error: NSError?) -> Void) {
+        httpJsonGetRequest(NSURL(string: "\(baseURL)/users/\(username)/status")!) { (json, error) -> Void in
+            guard error == nil else { completion(profiles: nil, error: error); return }
+            var profiles = [String: UserProfile]()
+            if let myProfile : UserProfile = "self" <~~ json! {
+                profiles["self"] = myProfile
+                if let partnerProfile : UserProfile = "partner" <~~ json! {
                     profiles["partner"] = partnerProfile
                 }
-                success(data: profiles)
-            } catch {
-                print("error deserializing JSON: \(error)")
+                completion(profiles: profiles, error: nil)
+            }
+            else {
+                completion(profiles: nil, error: err("Invalid JSON returned for profiles."))
             }
         }
     }
     
+    class func postPairWithCompletion(username: String, pairCode: String, completion: (profiles: [String : UserProfile]?, error: NSError?) -> Void) {
+        let pairUrl = NSURL(string: "\(baseURL)/users/\(username)/pair/\(pairCode)")!
+        httpJsonPostRequest(pairUrl, payload: [:]) { (json, error) -> Void in
+            guard error == nil else { completion(profiles: nil, error: error); return }
+            var profiles = [String: UserProfile]()
+            if let myProfile : UserProfile = "self" <~~ json! {
+                profiles["self"] = myProfile
+                if let partnerProfile : UserProfile = "partner" <~~ json! {
+                    profiles["partner"] = partnerProfile
+                }
+                completion(profiles: profiles, error: nil)
+            }
+            else {
+                completion(profiles: nil, error: err("Invalid JSON returned for profiles."))
+            }
+        }
+    }
+    
+    class func postUnpairWithCompletion(username: String, completion: (profiles: [String : UserProfile]?, error: NSError?) -> Void) {
+        let unpairUrl = NSURL(string: "\(baseURL)/users/\(username)/unpair")!
+        httpJsonPostRequest(unpairUrl, payload: [:]) { (json, error) -> Void in
+            guard error == nil else { completion(profiles: nil, error: error); return }
+            var profiles = [String: UserProfile]()
+            if let myProfile : UserProfile = "self" <~~ json! {
+                profiles["self"] = myProfile
+                if let partnerProfile : UserProfile = "partner" <~~ json! {
+                    profiles["partner"] = partnerProfile
+                }
+                completion(profiles: profiles, error: nil)
+            }
+            else {
+                completion(profiles: nil, error: err("Invalid JSON returned for profiles."))
+            }
+        }
+    }
+
+    // HELPERS
+    
+    // Shortcut to generate an appropriate NSError
     class func err(description: String) -> NSError {
         print("Error: \(description)")
         return NSError(domain:"com.emoto", code: 400, userInfo:[NSLocalizedDescriptionKey : description])
     }
+    
+    // A higher-level http GET request, which returns error unless the response has code 200 and the response
+    // body can be decoded as json.
+    class func httpJsonGetRequest(url: NSURL, completion: (json: JSON?, error: NSError?) -> Void) {
+        httpGetRequest(url) { (data, error) -> Void in
+            guard error == nil else {
+                completion(json: nil, error: error)
+                return
+            }
+            guard data != nil else {
+                completion(json: nil, error: err("No data received from server"))
+                return
+            }
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
+                completion(json: json, error: nil)
+            } catch {
+                completion(json: nil, error: err("error deserializing JSON: \(error)"))
+                return
+            }
+        }
+    }
+    
+    // A higher-level http POST request, which returns error unless the response has code 200 and the response
+    // body can be decoded as json.
+    class func httpJsonPostRequest(url: NSURL, payload: JSON, completion: (json: JSON?, error: NSError?) -> Void) {
+        httpPostRequest(url, payload: payload) { (data, error) -> Void in
+            guard error == nil else {
+                completion(json: nil, error: error)
+                return
+            }
+            guard data != nil else {
+                completion(json: nil, error: err("No data received from server"))
+                return
+            }
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! JSON
+                completion(json: json, error: nil)
+            } catch {
+                completion(json: nil, error: err("error deserializing JSON: \(error)"))
+                return
+            }
+        }
+    }
+
     
     // Issues a HTTP GET request, then runs the provided closure with the resulting data or error.
     // The Emoto Backend returns status code 200 or 400.

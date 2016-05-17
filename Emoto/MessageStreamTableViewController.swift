@@ -27,8 +27,9 @@ class MessageStreamTableViewController: UITableViewController {
     }
     
     func loadMessages(username: String) {
-        EmotoAPI.getMessagesWithSuccess(username) { (data) -> Void in
-            self.messages = data!
+        EmotoAPI.getMessagesWithCompletion(username) { (messages, error) -> Void in
+            // TODO: Handle error
+            self.messages = messages!
         }
     }
     

@@ -265,24 +265,31 @@
         <scene sceneID="yUF-ZJ-jhS">
             <objects>
                 <tableViewController id="bWd-3p-Pd6" customClass="EmotoTableViewController" customModule="Emoto" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="nfU-lg-6Zv">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="160" sectionHeaderHeight="28" sectionFooterHeight="28" id="nfU-lg-6Zv">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmotoTableCell" rowHeight="103" id="haw-kE-QBf" userLabel="EmotoTableCell" customClass="EmotoTableViewCell" customModule="Emoto" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="92" width="600" height="103"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmotoTableCell" rowHeight="160" id="haw-kE-QBf" userLabel="EmotoTableCell" customClass="EmotoTableViewCell" customModule="Emoto" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="600" height="160"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="haw-kE-QBf" id="boo-7V-gJn">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="102"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="159"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Blue Sky" translatesAutoresizingMaskIntoConstraints="NO" id="Ycd-aa-674">
-                                            <rect key="frame" x="0.0" y="-26" width="600" height="102"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="159"/>
                                         </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Emoto Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ygF-C2-IGR">
+                                            <rect key="frame" x="8" y="130" width="230" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="emotoLabel" destination="ygF-C2-IGR" id="e8b-1k-tEB"/>
                                     <outlet property="imageChoice" destination="Ycd-aa-674" id="IwP-hr-mke"/>
                                 </connections>
                             </tableViewCell>

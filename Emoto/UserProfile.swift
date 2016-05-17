@@ -112,8 +112,13 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         guard let username : String = "username" <~~ json else { return nil }
         guard let pairCode : String = "pair_code" <~~ json else { return nil }
         guard let weather : String = "weather" <~~ json else { return nil }
-        guard let present : Bool = "weather" <~~ json else { return nil }
-        guard let presentTimestamp : NSDate = "weather" <~~ json else { return nil }
+        guard let present : Bool = "present" <~~ json else { return nil }
+        guard let presentTimestampString : String = "presence_timestamp" <~~ json else { return nil }
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let presentTimestamp : NSDate! = dateFormatter.dateFromString(presentTimestampString)!
         
         if let currentEmoto : Emoto = "current_emoto" <~~ json {
             self.currentEmoto = currentEmoto

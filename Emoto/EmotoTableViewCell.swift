@@ -12,6 +12,8 @@ class EmotoTableViewCell: UITableViewCell {
 
     @IBOutlet weak var imageChoice: UIImageView!
     
+    @IBOutlet weak var emotoLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

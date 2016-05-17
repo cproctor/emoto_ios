@@ -67,8 +67,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         updateTimes()
         
         // Sync with the server. Shall we put this on a timer?
-        fetchMessagesFromServer("chris")
         fetchProfilesFromServer("chris")
+        fetchMessagesFromServer("chris")
         
         // Set a timer to update the times in the copresence window
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
@@ -129,6 +129,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
             }
             self.updateTimeZones()
             self.updateWeathers()
+            self.messagesTable.reloadData()
         }
     }
     

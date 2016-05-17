@@ -17,7 +17,10 @@ class EmotoTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadSamplePictures()
+        //loadSamplePictures()
+        
+        fetchEmotosFromServer()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -46,6 +49,7 @@ class EmotoTableViewController: UITableViewController {
         EmotoAPI.getEmotosWithCompletion() { (emotos, error) -> Void in
             self.emotos = emotos!
             self.selectedEmoto = emotos![0]
+            self.tableView.reloadData()
         }
     }
 
@@ -64,6 +68,7 @@ class EmotoTableViewController: UITableViewController {
         
         let emoto = emotos[indexPath.row]
         cell.imageChoice.image = emoto.image
+        cell.emotoLabel.text = emoto.name
         
         // Could put emoto name here too.
         // Configure the cell...

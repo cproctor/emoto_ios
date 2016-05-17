@@ -31,7 +31,7 @@ public class EmotoAPI {
     }
     
     class func postUpdateLocationWithCompletion(username:String, latitude: Float, longitude: Float, completion: (profile: UserProfile?, error: NSError?) -> Void) {
-        let signupURL = NSURL(string: "\(baseURL)/users/location")!
+        let signupURL = NSURL(string: "\(baseURL)/users/\(username)/location")!
         let params = [
             "username": username,
             "latitude": latitude,
@@ -146,6 +146,43 @@ public class EmotoAPI {
             }
         }
     }
+    
+    class func postPresentWithCompletion(username: String, completion: (profile: UserProfile?, error: NSError?) -> Void) {
+        let presentURL = NSURL(string: "\(baseURL)/users/\(username)/present")!
+        httpJsonPostRequest(presentURL, payload: [:]) { (json, error) -> Void in
+            guard error == nil else { completion(profile: nil, error: error); return }
+            if let profile = UserProfile(json: json!) {
+                completion(profile: profile, error: nil)
+            } else {
+                completion(profile: nil, error: err("Invalid profile data returned"))
+            }
+        }
+    }
+    
+    class func postAbsentWithCompletion(username: String, completion: (profile: UserProfile?, error: NSError?) -> Void) {
+        let presentURL = NSURL(string: "\(baseURL)/users/\(username)/absent")!
+        httpJsonPostRequest(presentURL, payload: [:]) { (json, error) -> Void in
+            guard error == nil else { completion(profile: nil, error: error); return }
+            if let profile = UserProfile(json: json!) {
+                completion(profile: profile, error: nil)
+            } else {
+                completion(profile: nil, error: err("Invalid profile data returned"))
+            }
+        }
+    }
+    
+    class func postUpdateCurrentEmotoWithCompletion(username: String, currentEmoto: Emoto, completion: (profile: UserProfile?, error: NSError?) -> Void) {
+        let updateEmotoURL = NSURL(string: "\(baseURL)/users/\(username)/emoto")!
+        httpJsonPostRequest(updateEmotoURL, payload: currentEmoto.toJSON()!) { (json, error) -> Void in
+            guard error == nil else { completion(profile: nil, error: error); return }
+            if let profile = UserProfile(json: json!) {
+                completion(profile: profile, error: nil)
+            } else {
+                completion(profile: nil, error: err("Invalid profile data returned"))
+            }
+        }
+    }
+    
 
     // =============
     // Mark: HELPERS

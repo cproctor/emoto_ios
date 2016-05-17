@@ -19,6 +19,9 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
     var username : String
     var pairCode : String
     var weather : String
+    var present : Bool
+    var presentTimestamp : NSDate
+    var currentEmoto : Emoto?
     var avatarUrl : NSURL?
     var weatherIconUrl : NSURL?
     
@@ -37,12 +40,15 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         static let usernameKey = "username"
         static let pairCodeKey = "pair_code"
         static let weatherKey = "weather"
-        static let avatarUrlKey = "avatar_url"
-        static let weatherIconUrlKey = "weather_icon"
+        static let presentKey = "present"
+        static let presentTimestampKey = "presentTimestamp"
+        static let currentEmotoKey = "currentEmoto"
+        static let avatarUrlKey = "avatarUrl"
+        static let weatherIconUrlKey = "weatherIcon"
     }
     
     // MARK: Initialization
-    init?(temperature: Float, city: String, latitude: Float, longitude: Float, timeZone: String, username: String, pairCode: String, weather: String, avatarUrl: NSURL?, weatherIconUrl: NSURL?)  {
+    init?(temperature: Float, city: String, latitude: Float, longitude: Float, timeZone: String, username: String, pairCode: String, weather: String, present : Bool, presentTimestamp : NSDate, currentEmoto : Emoto?, avatarUrl: NSURL?, weatherIconUrl: NSURL?)  {
         
         self.temperature = temperature
         self.city = city
@@ -52,6 +58,9 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         self.username = username
         self.pairCode = pairCode
         self.weather = weather
+        self.present = present
+        self.presentTimestamp = presentTimestamp
+        self.currentEmoto = currentEmoto
         self.avatarUrl = avatarUrl
         self.weatherIconUrl = weatherIconUrl
         super.init()
@@ -67,9 +76,11 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         aCoder.encodeObject(username, forKey: PropertyKey.usernameKey)
         aCoder.encodeObject(pairCode, forKey: PropertyKey.pairCodeKey)
         aCoder.encodeObject(weather, forKey: PropertyKey.weatherKey)
+        aCoder.encodeObject(present, forKey: PropertyKey.presentKey)
+        aCoder.encodeObject(presentTimestamp, forKey: PropertyKey.presentTimestampKey)
+        aCoder.encodeObject(currentEmoto, forKey: PropertyKey.currentEmotoKey)
         aCoder.encodeObject(avatarUrl, forKey: PropertyKey.avatarUrlKey)
         aCoder.encodeObject(weatherIconUrl, forKey: PropertyKey.weatherIconUrlKey)
-
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -81,12 +92,14 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         let username = aDecoder.decodeObjectForKey(PropertyKey.usernameKey) as! String
         let pairCode = aDecoder.decodeObjectForKey(PropertyKey.pairCodeKey) as! String
         let weather = aDecoder.decodeObjectForKey(PropertyKey.weatherKey) as! String
+        let present = aDecoder.decodeObjectForKey(PropertyKey.presentKey) as! Bool
+        let presentTimestamp = aDecoder.decodeObjectForKey(PropertyKey.presentTimestampKey) as! NSDate
+        let currentEmoto = aDecoder.decodeObjectForKey(PropertyKey.currentEmotoKey) as? Emoto
         let avatarUrl = aDecoder.decodeObjectForKey(PropertyKey.avatarUrlKey) as? NSURL
         let weatherIconUrl = aDecoder.decodeObjectForKey(PropertyKey.weatherIconUrlKey) as? NSURL
         
         // Must call designated initializer.
-        self.init(temperature: temperature, city: city, latitude: latitude, longitude: longitude, timeZone: timeZone, username: username, pairCode: pairCode, weather: weather, avatarUrl: avatarUrl, weatherIconUrl: weatherIconUrl)
-
+        self.init(temperature: temperature, city: city, latitude: latitude, longitude: longitude, timeZone: timeZone, username: username, pairCode: pairCode, weather: weather, present: present, presentTimestamp: presentTimestamp, currentEmoto: currentEmoto, avatarUrl: avatarUrl, weatherIconUrl: weatherIconUrl)
     }
     
     // MARK: Decodable protocol
@@ -99,8 +112,15 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         guard let username : String = "username" <~~ json else { return nil }
         guard let pairCode : String = "pair_code" <~~ json else { return nil }
         guard let weather : String = "weather" <~~ json else { return nil }
+        guard let present : Bool = "weather" <~~ json else { return nil }
+        guard let presentTimestamp : NSDate = "weather" <~~ json else { return nil }
+        
+        if let currentEmoto : Emoto = "current_emoto" <~~ json {
+            self.currentEmoto = currentEmoto
+        }
+
         //guard let avatarUrl : NSURL = "avatar_url" <~~ json else { return nil }
-        //guard let weatherIconUrl : NSURL = "weather_icon_url" <~~ json else { return nil }
+        guard let weatherIconUrl : NSURL = "weather_icon_url" <~~ json else { return nil }
         
         self.temperature = temperature
         self.city = city
@@ -110,7 +130,9 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         self.username = username
         self.pairCode = pairCode
         self.weather = weather
+        self.present = present
+        self.presentTimestamp = presentTimestamp
         //self.avatarUrl =
-        //self.weatherIconUrl =
+        self.weatherIconUrl = weatherIconUrl
     }
 }

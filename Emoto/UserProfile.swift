@@ -120,8 +120,10 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         let presentTimestamp : NSDate! = dateFormatter.dateFromString(presentTimestampString)!
         
-        if let currentEmoto : Emoto = "current_emoto" <~~ json {
-            self.currentEmoto = currentEmoto
+        if let currentEmotoJson = json["current_emoto"] as? JSON {
+            if let emoto = Emoto(json: currentEmotoJson) {
+                self.currentEmoto = emoto
+            }
         }
 
         //guard let avatarUrl : NSURL = "avatar_url" <~~ json else { return nil }

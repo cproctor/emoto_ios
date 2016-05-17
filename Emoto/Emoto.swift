@@ -95,7 +95,7 @@ class Emoto: NSObject, NSCoding, Glossy {
             self.name = name
             self.imageUrl = imageUrl
             super.init()
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            dispatch_async(dispatch_get_main_queue()) {
                 let data = NSData(contentsOfURL: imageUrl)
                 dispatch_async(dispatch_get_main_queue(), {
                     self.image = UIImage(data: data!)

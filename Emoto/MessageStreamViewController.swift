@@ -17,8 +17,9 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var yourWeatherLabel: UILabel!
     @IBOutlet weak var messagesTable: UITableView!
     @IBOutlet weak var messagesInput: UITextField!
-    
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var myEmotoImageView: UIImageView!
+    @IBOutlet weak var yourEmotoImageView: UIImageView!
     
     var messages = [Message]()
     var myProfile: UserProfile?
@@ -27,6 +28,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     var myFormatter: NSDateFormatter?
     var yourFormatter: NSDateFormatter?
     var timer: NSTimer?
+    var copresenceWindowTimer : NSTimer?
     
     // Refreshes the table view with new content
     // See: https://www.andrewcbancroft.com/2015/03/17/basics-of-pull-to-refresh-for-swift-developers/
@@ -63,7 +65,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         messages.removeAll()
         
         updateTimeZones()
-        updateWeathers()
+        updateCopresenceWindow()
         updateTimes()
         
         // Sync with the server. Shall we put this on a timer?
@@ -72,6 +74,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         
         // Set a timer to update the times in the copresence window
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
+        
+        copresenceWindowTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateCopresenceWindow), userInfo: nil, repeats: true)
         
         // Control the table view subclass
         self.messagesTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -93,11 +97,17 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         yourTimeLabel.text = yourFormatter!.stringFromDate(now)
     }
     
-    func updateWeathers() {
+    func updateCopresenceWindow() {
         guard myProfile != nil else { return }
-        myWeatherLabel.text = myProfile!.weather
         guard yourProfile != nil else { return }
+        myWeatherLabel.text = myProfile!.weather
         yourWeatherLabel.text = yourProfile!.weather
+        if let myCurrentEmoto = myProfile!.currentEmoto {
+            myEmotoImageView.image = myCurrentEmoto.image
+        }
+        if let yourCurrentEmoto = yourProfile!.currentEmoto {
+            yourEmotoImageView.image = yourCurrentEmoto.image
+        }
     }
     
     func handleRefresh(refreshControl: UIRefreshControl) {
@@ -128,8 +138,9 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
                 self.yourProfile = yourProfile
             }
             self.updateTimeZones()
-            self.updateWeathers()
+            self.updateCopresenceWindow()
             self.messagesTable.reloadData()
+            self.messagesTable.layoutSubviews()
         }
     }
     
@@ -171,8 +182,6 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         if message.emoto != nil {
             cell.emoto.image = message.emoto!.image
         }
-        
-        print("printing message: ", message.text)
         
         // Configure the cell...
         

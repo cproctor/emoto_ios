@@ -32,29 +32,43 @@ class Emoto: NSObject, NSCoding, Glossy {
         static let idKey = "id"
     }
     
+    // Returns the file URL at which an Emoto with the given ID should be saved.
+    class func archiveFilePath(id: Int) -> String {
+        return Emoto.ArchiveURL.URLByAppendingPathComponent("emoto_\(id)").absoluteString
+    }
+    
+    // Checks whether an archived copy of an Emoto with the given ID exists.
+    class func localArchiveExists(id: Int) -> Bool {
+        let fileManager = NSFileManager.defaultManager()
+        return fileManager.fileExistsAtPath(Emoto.archiveFilePath(id))
+    }
+    
     // MARK: Initialization
     init?(name: String, image: UIImage?, imageUrl: NSURL?, id: Int = -1)  {
         self.name = name
         self.image = image
         self.imageUrl = imageUrl
         self.id = id
-        
         super.init()
     }
     
     // MARK: NSCoding
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: PropertyKey.nameKey)
-        aCoder.encodeObject(image, forKey: PropertyKey.imageKey)
-        aCoder.encodeObject(imageUrl, forKey: PropertyKey.imageUrlKey)
-        aCoder.encodeInteger(id!, forKey: PropertyKey.idKey)
+    func encodeWithCoder(coder: NSCoder) {
+        coder.encodeObject(name, forKey: PropertyKey.nameKey)
+        if image != nil {
+            coder.encodeObject(image!, forKey: PropertyKey.imageKey)
+        }
+        if imageUrl != nil {
+            coder.encodeObject(imageUrl!, forKey: PropertyKey.imageUrlKey)
+        }
+        coder.encodeInteger(id!, forKey: PropertyKey.idKey)
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
-        let name = aDecoder.decodeObjectForKey(PropertyKey.nameKey) as! String
-        let image = aDecoder.decodeObjectForKey(PropertyKey.imageKey) as? UIImage
-        let imageUrl = aDecoder.decodeObjectForKey(PropertyKey.imageUrlKey) as? NSURL
-        let id = aDecoder.decodeIntegerForKey(PropertyKey.idKey) 
+    required convenience init?(coder decoder: NSCoder) {
+        let name = decoder.decodeObjectForKey(PropertyKey.nameKey) as! String
+        let image = decoder.decodeObjectForKey(PropertyKey.imageKey) as? UIImage
+        let imageUrl = decoder.decodeObjectForKey(PropertyKey.imageUrlKey) as? NSURL
+        let id = decoder.decodeIntegerForKey(PropertyKey.idKey)
         
         // Must call designated initializer.
         self.init(name: name, image: image, imageUrl: imageUrl, id: id)
@@ -64,30 +78,33 @@ class Emoto: NSObject, NSCoding, Glossy {
     // When an emoto is loaded from JSON, we load its image from archive if possible.
     required init?(json: JSON) {
         guard let id: Int = "id" <~~ json else { return nil}
-        guard let name: String = "name" <~~ json else { return nil}
-        guard let imageUrl: NSURL = "url" <~~ json else { return nil}
         
-        self.id = id
-        self.name = name
-        self.imageUrl = imageUrl
-        
-        super.init()
-        
-        if localArchiveExists() {
-            let archivedEmoto = NSKeyedUnarchiver.unarchiveObjectWithFile(archiveFilePath()) as! Emoto
-            self.image = archivedEmoto.image
-            print("Emoto loaded from JSON: \(self.name). Image file loaded from archive.")
+        if Emoto.localArchiveExists(id) {
+            guard let savedEmoto = NSKeyedUnarchiver.unarchiveObjectWithFile(Emoto.archiveFilePath(id)) as? Emoto else { return nil }
+            self.id = savedEmoto.id
+            self.name = savedEmoto.name
+            self.image = savedEmoto.image
+            self.imageUrl = savedEmoto.imageUrl
+            super.init()
+            print("Loaded Emoto \(self.name) from archive")
         }
         else {
-            // Asynchronously fetch the image, then save.
-            print("Emoto loaded from JSON: \(self.name). Loading image...")
+            guard let name: String = "name" <~~ json else { return nil}
+            guard let imageUrl: NSURL = "url" <~~ json else { return nil}
+            self.id = id
+            self.name = name
+            self.imageUrl = imageUrl
+            super.init()
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 let data = NSData(contentsOfURL: imageUrl)
                 dispatch_async(dispatch_get_main_queue(), {
                     self.image = UIImage(data: data!)
-                    NSKeyedArchiver.archiveRootObject(self, toFile: self.archiveFilePath())
-                    print("Image file fetched and archived for emoto \(self.name).")
-                });
+                    guard self.save() else {
+                        print("ERROR. Could not archive")
+                        return
+                    }
+                    print("Loaded Emoto \(self.name) from server")
+                })
             }
         }
     }
@@ -101,13 +118,17 @@ class Emoto: NSObject, NSCoding, Glossy {
         ])
     }
     
-    func localArchiveExists() -> Bool {
-        let fileManager = NSFileManager.defaultManager()
-        return fileManager.fileExistsAtPath(archiveFilePath())
-    }
-    
-    func archiveFilePath() -> String {
-        return Emoto.ArchiveURL.URLByAppendingPathComponent("\(id)").absoluteString
+    func save() -> Bool {
+        // Attempt to save in user defaults. Also not working.
+        /*
+        let savedEmoto = NSKeyedArchiver.archivedDataWithRootObject(self)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(savedEmoto, forKey: "emoto_\(self.id)")
+        return true
+        */
+        
+        // For some reason I can't archive to file.
+        return NSKeyedArchiver.archiveRootObject(self, toFile: Emoto.archiveFilePath(self.id!))
     }
 }
 

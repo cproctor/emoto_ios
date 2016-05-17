@@ -56,7 +56,6 @@ class Message: NSObject, NSCoding, Glossy {
         aCoder.encodeObject(author, forKey: PropertyKey.authorKey)
         aCoder.encodeObject(timestamp, forKey: PropertyKey.timestampKey)
         aCoder.encodeInteger(id!, forKey: PropertyKey.idKey)
-        
     }
     
     required convenience init?(coder aDecoder: NSCoder) {

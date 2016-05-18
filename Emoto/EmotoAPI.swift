@@ -183,14 +183,14 @@ public class EmotoAPI {
         }
     }
     
-    class func postUpdateCurrentEmotoWithCompletion(username: String, currentEmoto: Emoto, completion: (profile: UserProfile?, error: NSError?) -> Void) {
+    class func postUpdateCurrentEmotoWithCompletion(username: String, currentEmoto: Emoto, profileCompletion: (()->Void)?, completion: (profile: UserProfile?, error: NSError?) -> Void) {
         
         // TODO: Save the updated profile.
         
         let updateEmotoURL = NSURL(string: "\(baseURL)/users/\(username)/emoto")!
         httpJsonPostRequest(updateEmotoURL, payload: currentEmoto.toJSON()!) { (json, error) -> Void in
             guard error == nil else { completion(profile: nil, error: error); return }
-            if let profile = UserProfile(json: json!) {
+            if let profile = UserProfile(json: json!, completion: profileCompletion) {
                 completion(profile: profile, error: nil)
             } else {
                 completion(profile: nil, error: err("Invalid profile data returned"))

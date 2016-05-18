@@ -87,14 +87,14 @@ class EmotoTableViewController: UITableViewController {
             
             if mode == "CURRENT EMOTO" { // We came here to set the current emoto.
                 // TODO READ USERNAME FROM USER DEFAULTS
-                EmotoAPI.postUpdateCurrentEmotoWithCompletion("chris", currentEmoto: selectedEmoto!) { (emoto, error) -> Void in
+                EmotoAPI.postUpdateCurrentEmotoWithCompletion("chris", currentEmoto: selectedEmoto!, profileCompletion: svc.updateCopresenceWindow) { (profile, error) -> Void in
                     guard error == nil else {
                         print("Error selecting emoto")
                         return
                     }
                     print("Saving emoto selection: \(self.selectedEmoto!.name)")
                     print(self.selectedEmoto!.debugDescription)
-                    svc.futureCurrentEmoto = self.selectedEmoto!
+                    svc.myProfile = profile
                 }
             }
             if mode == "MESSAGE EMOTO" { // We came here to set a message emoto.

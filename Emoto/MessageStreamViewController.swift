@@ -95,9 +95,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         
         // Sync with the server. Shall we put this on a timer?
         // Profile should be saved in user defaults, so we always know who's here.
-        if myProfile == nil {
-            fetchProfilesFromServer("chris")
-        }
+        fetchProfilesFromServer("chris")
         
         // Set a timer to update the times in the copresence window
         updateTimes()

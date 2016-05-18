@@ -281,11 +281,23 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Emoto Logo" translatesAutoresizingMaskIntoConstraints="NO" id="pGS-Wr-mvo">
+                                            <rect key="frame" x="532" y="91" width="60" height="60"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="60" id="lxj-qx-mLY"/>
+                                                <constraint firstAttribute="height" constant="60" id="ysf-1F-xAi"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="pGS-Wr-mvo" firstAttribute="trailing" secondItem="boo-7V-gJn" secondAttribute="trailingMargin" id="CUL-vb-hxT"/>
+                                        <constraint firstItem="pGS-Wr-mvo" firstAttribute="bottom" secondItem="boo-7V-gJn" secondAttribute="bottomMargin" id="Ddt-2s-wdS"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="emotoLabel" destination="ygF-C2-IGR" id="e8b-1k-tEB"/>
                                     <outlet property="imageChoice" destination="Ycd-aa-674" id="IwP-hr-mke"/>
+                                    <outlet property="selectedIcon" destination="pGS-Wr-mvo" id="Qym-CV-qmQ"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

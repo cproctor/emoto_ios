@@ -14,6 +14,9 @@ class EmotoTableViewCell: UITableViewCell {
     
     @IBOutlet weak var emotoLabel: UILabel!
     
+    @IBOutlet weak var selectedIcon: UIImageView!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -21,8 +24,9 @@ class EmotoTableViewCell: UITableViewCell {
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+        selectedIcon.hidden = !selected
         // Configure the view for the selected state
     }
+    
 
 }

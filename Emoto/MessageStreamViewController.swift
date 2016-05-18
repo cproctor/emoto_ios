@@ -46,6 +46,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        syncProfile()
         self.navigationController?.navigationBarHidden = true
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessageStreamViewController.keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
@@ -83,6 +84,59 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         self.messagesTable.addSubview(self.refreshControl)
         messagesTable.delegate = self
         messagesTable.dataSource = self
+    }
+    
+    func syncProfile() {
+        /*
+        // We're going to sync location.
+        var locationManager: CLLocationManager! = CLLocationManager()
+        locationManager.delegate = self
+        
+        switch CLLocationManager.authorizationStatus() {
+        case .AuthorizedWhenInUse:
+            // .We have access.
+            break
+        case .NotDetermined:
+            locationManager.requestAlwaysAuthorization()
+        case .Restricted, .Denied:
+            let alertController = UIAlertController(
+                title: "Location Access Disabled",
+                message: "Emoto needs access to your location to function. Please open this app's settings and set location access to 'Always'.",
+                preferredStyle: .Alert
+            )
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            
+            let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
+                if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                    UIApplication.sharedApplication().openURL(url)
+                }
+            }
+            alertController.addAction(openAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+        
+        
+        locationManager.requestWhenInUseAuthorization()
+        
+        var profile : UserProfile
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if let profileData = defaults.objectForKey("my_profile") else {
+            let profile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData)
+            EmotoAPI.getProfileWithCompletion(profile!.username) { (profiles)
+                
+            }, completion: <#T##(profiles: [String : UserProfile]?, error: NSError?) -> Void#>)
+        }
+        else {
+            // Sign up using the phone's name. Obviously won't work in production...
+            let username = UIDevice.currentDevice().name
+            EmotoAPI.postSignupWithCompletion(username, latitude: <#T##Float#>, longitude: <#T##Float#>, completion: <#T##(profile: UserProfile?, error: NSError?) -> Void#>)
+        }
+        */
+
     }
     
     func updateTimeZones() {

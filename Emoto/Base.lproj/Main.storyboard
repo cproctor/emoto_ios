@@ -198,6 +198,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="VlM-n0-Lgd" firstAttribute="top" secondItem="Ya5-FN-dUm" secondAttribute="topMargin" id="6n1-IW-ofj"/>
                             <constraint firstItem="1MM-nv-NwD" firstAttribute="leading" secondItem="oea-MB-H2f" secondAttribute="leading" id="BFt-NC-8o8"/>
                             <constraint firstItem="1MM-nv-NwD" firstAttribute="top" secondItem="wx1-TK-Ih6" secondAttribute="bottom" constant="99" id="Hkm-D9-b7I"/>
                             <constraint firstItem="1MM-nv-NwD" firstAttribute="bottom" secondItem="oea-MB-H2f" secondAttribute="top" id="ITb-Ju-1Xv"/>
@@ -206,7 +207,6 @@
                             <constraint firstAttribute="bottom" secondItem="oea-MB-H2f" secondAttribute="bottom" id="jnQ-F0-aD8"/>
                             <constraint firstItem="VlM-n0-Lgd" firstAttribute="leading" secondItem="Ya5-FN-dUm" secondAttribute="leading" id="lpu-w5-Nbu"/>
                             <constraint firstItem="1MM-nv-NwD" firstAttribute="trailing" secondItem="oea-MB-H2f" secondAttribute="trailing" id="qtA-6S-5DP"/>
-                            <constraint firstItem="VlM-n0-Lgd" firstAttribute="top" secondItem="Ya5-FN-dUm" secondAttribute="top" id="vPg-xR-5Xs" userLabel="Copresence Window.top = Top Layout Guide.bottom + 50"/>
                             <constraint firstItem="oea-MB-H2f" firstAttribute="leading" secondItem="Ya5-FN-dUm" secondAttribute="leading" id="zRv-1P-7kN"/>
                         </constraints>
                     </view>

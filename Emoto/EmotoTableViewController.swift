@@ -83,6 +83,7 @@ class EmotoTableViewController: UITableViewController {
         selectedCell.contentView.backgroundColor = UIColor.redColor()
         let row = indexPath.row
         selectedEmoto = emotos[row]
+        print("Selected emoto \(selectedEmoto!.name)")
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
@@ -90,6 +91,14 @@ class EmotoTableViewController: UITableViewController {
             let svc = segue.destinationViewController as! MessageStreamViewController
             
             svc.selectedEmoto = selectedEmoto!
+            // TODO READ USERNAME FROM USER DEFAULTS
+            EmotoAPI.postUpdateCurrentEmotoWithCompletion("chris", currentEmoto: selectedEmoto!) { (emoto, error) -> Void in
+                guard error == nil else {
+                    print("Error selecting emoto")
+                    return
+                }
+                print("Saving emoto selection: \(self.selectedEmoto!.name)")
+            }
             
         }
     }

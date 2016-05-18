@@ -11,9 +11,7 @@
 import UIKit
 
 class Emoto: NSObject, NSCoding, Glossy {
-    
-    let UNSAVED = -1
-    
+        
     // MARK: Properties
     var id: Int?
     var name: String
@@ -23,14 +21,6 @@ class Emoto: NSObject, NSCoding, Glossy {
     // MARK: Archiving Paths
     static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
     static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("emotos")
-    
-    // MARK: Types
-    struct PropertyKey {
-        static let nameKey = "name"
-        static let imageKey = "image"
-        static let imageUrlKey = "imageUrl"
-        static let idKey = "id"
-    }
     
     // Returns the file URL at which an Emoto with the given ID should be saved.
     class func archiveFilePath(id: Int) -> String {
@@ -54,21 +44,21 @@ class Emoto: NSObject, NSCoding, Glossy {
     
     // MARK: NSCoding
     func encodeWithCoder(coder: NSCoder) {
-        coder.encodeObject(name, forKey: PropertyKey.nameKey)
+        coder.encodeObject(name, forKey: "name")
         if image != nil {
-            coder.encodeObject(image!, forKey: PropertyKey.imageKey)
+            coder.encodeObject(image!, forKey: "image")
         }
         if imageUrl != nil {
-            coder.encodeObject(imageUrl!, forKey: PropertyKey.imageUrlKey)
+            coder.encodeObject(imageUrl!, forKey: "imageUrl")
         }
-        coder.encodeInteger(id!, forKey: PropertyKey.idKey)
+        coder.encodeInteger(id!, forKey: "id")
     }
     
     required convenience init?(coder decoder: NSCoder) {
-        let name = decoder.decodeObjectForKey(PropertyKey.nameKey) as! String
-        let image = decoder.decodeObjectForKey(PropertyKey.imageKey) as? UIImage
-        let imageUrl = decoder.decodeObjectForKey(PropertyKey.imageUrlKey) as? NSURL
-        let id = decoder.decodeIntegerForKey(PropertyKey.idKey)
+        let name = decoder.decodeObjectForKey("name") as! String
+        let image = decoder.decodeObjectForKey("image") as? UIImage
+        let imageUrl = decoder.decodeObjectForKey("imageUrl") as? NSURL
+        let id = decoder.decodeIntegerForKey("id")
         
         // Must call designated initializer.
         self.init(name: name, image: image, imageUrl: imageUrl, id: id)

@@ -39,6 +39,9 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         return refreshControl
     }()
     
+    @IBAction func didTapEmotoLogo(sender: UIBarButtonItem) {
+        performSegueWithIdentifier("ChangeEmoto", sender: self)
+    }
     
     @IBAction func didTapEmotoButton(sender: UIButton) {
         performSegueWithIdentifier("ChangeEmoto", sender: self)

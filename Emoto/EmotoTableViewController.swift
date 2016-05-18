@@ -10,10 +10,13 @@ import UIKit
 
 class EmotoTableViewController: UITableViewController {
 
-    var images = [UIImage]()
-    var emotos = [Emoto]()
-    
+    var mode : String?
     var selectedEmoto : Emoto? = nil
+    var emotos : [Emoto] = [Emoto]() {
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,18 +50,10 @@ class EmotoTableViewController: UITableViewController {
     
     func fetchEmotosFromServer() {
         EmotoAPI.getEmotosWithCompletion() { (emotos, error) -> Void in
-            self.emotos = emotos!
-            self.selectedEmoto = emotos![0]
-            self.tableView.reloadData()
+            dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                self.emotos = emotos!
+            }
         }
-    }
-
-    func loadSamplePictures () {
-        let emoto1 = UIImage(named: "Blue Sky")
-        let emoto2 = UIImage(named: "Stormy")
-        let emoto3 = UIImage(named: "Sunset")
-        
-        images += [emoto1!, emoto2!, emoto3!]
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -86,20 +81,25 @@ class EmotoTableViewController: UITableViewController {
         print("Selected emoto \(selectedEmoto!.name)")
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-        if (segue.identifier == "SelectEmoto") {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == "EmotoWasSelected") {
             let svc = segue.destinationViewController as! MessageStreamViewController
             
-            svc.selectedEmoto = selectedEmoto!
-            // TODO READ USERNAME FROM USER DEFAULTS
-            EmotoAPI.postUpdateCurrentEmotoWithCompletion("chris", currentEmoto: selectedEmoto!) { (emoto, error) -> Void in
-                guard error == nil else {
-                    print("Error selecting emoto")
-                    return
+            if mode == "CURRENT EMOTO" { // We came here to set the current emoto.
+                // TODO READ USERNAME FROM USER DEFAULTS
+                EmotoAPI.postUpdateCurrentEmotoWithCompletion("chris", currentEmoto: selectedEmoto!) { (emoto, error) -> Void in
+                    guard error == nil else {
+                        print("Error selecting emoto")
+                        return
+                    }
+                    print("Saving emoto selection: \(self.selectedEmoto!.name)")
+                    print(self.selectedEmoto!.debugDescription)
+                    svc.futureCurrentEmoto = self.selectedEmoto!
                 }
-                print("Saving emoto selection: \(self.selectedEmoto!.name)")
             }
-            
+            if mode == "MESSAGE EMOTO" { // We came here to set a message emoto.
+                svc.futureMessageEmoto = selectedEmoto!
+            }
         }
     }
     

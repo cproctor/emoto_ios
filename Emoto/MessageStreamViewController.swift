@@ -20,36 +20,65 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var myEmotoImageView: UIImageView!
     @IBOutlet weak var yourEmotoImageView: UIImageView!
+    @IBOutlet weak var messageEmotoImageView: UIImageView!
     
-    var messages = [Message]()
-    var myProfile: UserProfile?
-    var yourProfile: UserProfile?
-    var selectedEmoto : Emoto? = nil
-    var myFormatter: NSDateFormatter?
-    var yourFormatter: NSDateFormatter?
+    // Other controllers may change this value; when the view loads
+    // its value will be assigned to the true property.
+    var futureMessageEmoto : Emoto? = nil
+    var futureCurrentEmoto : Emoto? = nil
+    
+    var myFormatter = NSDateFormatter()
+    var yourFormatter = NSDateFormatter()
     var timer: NSTimer?
-    var copresenceWindowTimer : NSTimer?
     
-    // Refreshes the table view with new content
-    // See: https://www.andrewcbancroft.com/2015/03/17/basics-of-pull-to-refresh-for-swift-developers/
-    lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(MessageStreamViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        
-        return refreshControl
-    }()
-    
-    @IBAction func didTapEmotoLogo(sender: UIBarButtonItem) {
-        performSegueWithIdentifier("ChangeEmoto", sender: self)
+    // MARK: Properties with observers
+    var myProfile: UserProfile? {
+        didSet {
+            updateCopresenceWindow()
+        }
     }
     
-    @IBAction func didTapEmotoButton(sender: UIButton) {
-        performSegueWithIdentifier("ChangeEmoto", sender: self)
+    var yourProfile: UserProfile? {
+        didSet {
+            updateCopresenceWindow()
+        }
+    }
+    
+    func updateCopresenceWindow() {
+        print("Updating copresence window")
+        guard myProfile != nil else { return }
+        myFormatter.timeZone = NSTimeZone(name: myProfile!.timeZone)!
+        myWeatherLabel.text = myProfile!.weather
+        guard myProfile!.currentEmoto != nil else { return }
+        myEmotoImageView.image = myProfile!.currentEmoto!.image
+        
+        guard yourProfile != nil else { return }
+        yourFormatter.timeZone = NSTimeZone(name: yourProfile!.timeZone)!
+        yourWeatherLabel.text = yourProfile!.weather
+        guard yourProfile!.currentEmoto != nil else { return }
+        yourEmotoImageView.image = yourProfile!.currentEmoto!.image
+    }
+    
+    var messages : [Message] = [Message]() {
+        didSet {
+            messagesTable.reloadData()
+        }
+    }
+    
+    var messageEmoto : Emoto? {
+        didSet {
+            guard let emoto = messageEmoto, let emotoImage = emoto.image else {
+                messageEmotoImageView.image = UIImage(named: "EmotoPlaceholder")
+                return
+            }
+            messageEmotoImageView.image = emotoImage
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        syncProfile()
+        acceptFutureValues()
+        
         self.navigationController?.navigationBarHidden = true
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessageStreamViewController.keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
@@ -59,34 +88,37 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(MessageStreamViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
-        myFormatter = NSDateFormatter()
-        myFormatter!.dateStyle = .NoStyle
-        myFormatter!.timeStyle = .ShortStyle
-        yourFormatter = NSDateFormatter()
-        yourFormatter!.dateStyle = .NoStyle
-        yourFormatter!.timeStyle = .ShortStyle
-        
-        messages.removeAll()
-        
-        updateTimeZones()
-        updateCopresenceWindow()
-        updateTimes()
+        myFormatter.dateStyle = .NoStyle
+        myFormatter.timeStyle = .ShortStyle
+        yourFormatter.dateStyle = .NoStyle
+        yourFormatter.timeStyle = .ShortStyle
         
         // Sync with the server. Shall we put this on a timer?
         // Profile should be saved in user defaults, so we always know who's here.
-        fetchProfilesFromServer("chris")
-        fetchMessagesFromServer("chris")
+        if myProfile == nil {
+            fetchProfilesFromServer("chris")
+        }
         
         // Set a timer to update the times in the copresence window
+        updateTimes()
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
-        
-        copresenceWindowTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateCopresenceWindow), userInfo: nil, repeats: true)
         
         // Control the table view subclass
         self.messagesTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.messagesTable.addSubview(self.refreshControl)
         messagesTable.delegate = self
         messagesTable.dataSource = self
+    }
+    
+    func acceptFutureValues() {
+        if futureMessageEmoto != nil {
+            messageEmoto = futureMessageEmoto
+            futureMessageEmoto = nil
+        }
+        if futureCurrentEmoto != nil {
+            print("Updating current emoto based on future setting")
+            myProfile!.currentEmoto = futureCurrentEmoto
+            futureCurrentEmoto = nil
+        }
     }
     
     func syncProfile() {
@@ -142,35 +174,10 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
 
     }
     
-    func updateTimeZones() {
-        guard myProfile != nil else { return }
-        myFormatter!.timeZone = NSTimeZone(name: myProfile!.timeZone)!
-        guard yourProfile != nil else { return }
-        yourFormatter!.timeZone = NSTimeZone(name: yourProfile!.timeZone)!
-    }
-    
     func updateTimes() {
         let now = NSDate()
-        myTimeLabel.text = myFormatter!.stringFromDate(now)
-        yourTimeLabel.text = yourFormatter!.stringFromDate(now)
-    }
-    
-    func updateCopresenceWindow() {
-        guard myProfile != nil else { return }
-        guard yourProfile != nil else { return }
-        myWeatherLabel.text = myProfile!.weather
-        yourWeatherLabel.text = yourProfile!.weather
-        if let myCurrentEmoto = myProfile!.currentEmoto {
-            myEmotoImageView.image = myCurrentEmoto.image
-        }
-        if let yourCurrentEmoto = yourProfile!.currentEmoto {
-            yourEmotoImageView.image = yourCurrentEmoto.image
-        }
-    }
-    
-    func handleRefresh(refreshControl: UIRefreshControl) {
-        self.messagesTable.reloadData()
-        refreshControl.endRefreshing()
+        myTimeLabel.text = myFormatter.stringFromDate(now)
+        yourTimeLabel.text = yourFormatter.stringFromDate(now)
     }
 
     override func didReceiveMemoryWarning() {
@@ -179,45 +186,29 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func fetchMessagesFromServer(username: String) {
-        EmotoAPI.getMessagesWithCompletion(username) { (msg, error) -> Void in
-            // TODO: Handle error
-            self.messages += msg!
-            self.messagesTable.reloadData()
+        EmotoAPI.getMessagesWithCompletion(username) { (messages, error) -> Void in
+            dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                guard error == nil else { return }
+                self.messages = messages!
+            }
         }
     }
     
     func fetchProfilesFromServer(username: String) {
-        EmotoAPI.getProfileWithCompletion(username) { (profiles, error) -> Void in
-            // TODO: Handle error
-            if let myProfile = profiles!["self"] {
-                self.myProfile = myProfile
+        EmotoAPI.getProfileWithCompletion(username, profileCompletion: updateCopresenceWindow) { (profiles, error) -> Void in
+            dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                if let myProfile = profiles!["self"] {
+                    print("Got my profile")
+                    self.myProfile = myProfile
+                }
+                if let yourProfile = profiles!["partner"] {
+                    print("Got your profile")
+                    self.yourProfile = yourProfile
+                }
+                self.fetchMessagesFromServer("chris")
             }
-            if let yourProfile = profiles!["partner"] {
-                self.yourProfile = yourProfile
-            }
-            self.updateTimeZones()
-            self.updateCopresenceWindow()
-            self.messagesTable.reloadData()
-            self.messagesTable.layoutSubviews()
         }
     }
-    
-    func loadSampleMessages () {
-        let emoto1 = Emoto(name: "Peaceful", image: UIImage(named: "Blue Sky"), imageUrl: nil, id: -2)
-        let emoto2 = Emoto(name: "Stormy", image: UIImage(named: "Stormy"), imageUrl: nil, id: -3)
-        let emoto3 = Emoto(name: "Awestruck", image: UIImage(named: "Sunset"), imageUrl: nil, id: -4)
-        
-        let date1 = NSDate()
-        let date2 = NSDate()
-        let date3 = NSDate()
-        
-        let msg1 = Message(text: "Good morning!", emoto: emoto1, author: "chris", timestamp: date1)!
-        let msg2 = Message(text: "I stubbed my toe.", emoto: emoto2, author: "zuz", timestamp: date2)!
-        let msg3 = Message(text: "But I feel better now.", emoto: emoto3, author: "zuz", timestamp: date3)!
-        
-        messages += [msg1, msg2, msg3]
-    }
-    
     
     // MARK: - Table view data source
     
@@ -271,21 +262,27 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         adjustingHeight(false, notification: notification)
     }
     
+    
     @IBAction func sendMessage(sender: UIButton) {
-        let emoto1 = selectedEmoto
-        let date1 = NSDate()
-        let text1 = messagesInput.text!
-        if !text1.isEmpty {
-            let msg1 = Message(text: text1, emoto: emoto1, author: self.myProfile!.username, timestamp: date1)!
+        let emoto = messageEmoto
+        let date = NSDate()
+        let text = messagesInput.text!
+        if !text.isEmpty {
+            let message = Message(text: text, emoto: emoto, author: self.myProfile!.username, timestamp: date)!
+            messages += [message]
+            self.messagesTable.reloadData()
             messagesInput.text = ""
-            EmotoAPI.postNewMessageWithCompletion(msg1) { (savedMessage, error) -> Void in
+            EmotoAPI.postNewMessageWithCompletion(message) { (savedMessage, error) -> Void in
                 // TODO: Handle error
-                self.messages += [savedMessage!]
-                self.messagesTable.reloadData()
+                // TODO: WE shouldn't have to add to self.messages. This should be done by the PostNewMessage API call.
                 self.saveMessages()
             }
         }
         view.endEditing(true)
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     // MARK: NSCoding
@@ -296,11 +293,14 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         }
     }
     
+    // TODO: Move this to EmotoAPI.
     func loadMessages() -> [Message]? {
         return NSKeyedUnarchiver.unarchiveObjectWithFile(Message.ArchiveURL.path!) as? [Message]
     }
     
+    // CP: Don't understand.
     func adjustingHeight(show:Bool, notification:NSNotification) {
+        /*
         var userInfo = notification.userInfo!
         let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
         let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSTimeInterval
@@ -308,7 +308,12 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         UIView.animateWithDuration(animationDurarion, animations: { () -> Void in
             self.bottomConstraint.constant += changeInHeight
         })
-        
+        */
+    }
+    
+    // When MyEmoto is tapped, segue to select a new current emoto.
+    @IBAction func myEmotoImageViewWasTapped(sender: UITapGestureRecognizer) {
+        performSegueWithIdentifier("SelectCurrentEmoto", sender: sender)
     }
     
     func dismissKeyboard() {
@@ -316,14 +321,25 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         view.endEditing(true)
     }
     
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // There are two possible reasons for segueing to EmotoTableView: to select the user's current emoto, and to 
+    // select the message's emoto. Here we tell the EmotoTableViewController which is our purpose.
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == "SelectCurrentEmoto") {
+            print("Selecting current emoto")
+            let navCon = segue.destinationViewController as! UINavigationController
+            let emotoTVCon = navCon.viewControllers.first as! EmotoTableViewController
+            emotoTVCon.mode = "CURRENT EMOTO"
+            emotoTVCon.navigationItem.title = "Set Current Emoto"
+        }
+        if (segue.identifier == "SelectMessageEmoto") {
+            print("Selecting message emoto")
+            let navCon = segue.destinationViewController as! UINavigationController
+            let emotoTVCon = navCon.viewControllers.first as! EmotoTableViewController
+            emotoTVCon.mode = "MESSAGE EMOTO"
+            emotoTVCon.navigationItem.title = "Set Message Emoto"
+        }
     }
-    */
 
 }

@@ -1,12 +1,15 @@
 //
 //  EmotoAPI.swift
 //  Emoto
-//  Provides methods for accessing backend API calls. Each method should be invoked with a closure 
+//  Provides methods for accessing backend API calls. Each method is invoked with a closure 
 //  with two arguments: the optional data type returned on success, and an optional error.
 //
 //  Created by Chris Proctor on 5/10/16.
 //  Copyright © 2016 Chris Proctor. All rights reserved.
 //
+// TODO: Calls to the API should also take care of persisting / updating locally. 
+// TODO: In general, show messages locally immediately, to create the impression of reduced latency. But that doesn't happen here.
+
 import Foundation
 
 let baseURL = "http://104.131.45.220/api/v1"
@@ -77,20 +80,29 @@ public class EmotoAPI {
     }
     
     // When successful, returns a dictionary of profiles, possibly including keys for "self" and "partner"
-    class func getProfileWithCompletion(username: String, completion: (profiles: [String : UserProfile]?, error: NSError?) -> Void) {
+    class func getProfileWithCompletion(username: String, profileCompletion: (()->Void)?, completion: (profiles: [String : UserProfile]?, error: NSError?) -> Void) {
         httpJsonGetRequest(NSURL(string: "\(baseURL)/users/\(username)/status")!) { (json, error) -> Void in
             guard error == nil else { completion(profiles: nil, error: error); return }
             var profiles = [String: UserProfile]()
-            if let myProfile : UserProfile = "self" <~~ json! {
-                profiles["self"] = myProfile
-                if let partnerProfile : UserProfile = "partner" <~~ json! {
-                    profiles["partner"] = partnerProfile
-                }
-                completion(profiles: profiles, error: nil)
-            }
-            else {
+            guard let myProfileJson = json!["self"] as? JSON else {
                 completion(profiles: nil, error: err("Invalid JSON returned for profiles."))
+                return
             }
+            guard let myProfile = UserProfile(json: myProfileJson, completion: profileCompletion) else {
+                completion(profiles: nil, error: err("Invalid JSON returned for profiles."))
+                return
+            }
+            profiles["self"] = myProfile
+            
+            // Possibly, there is no partner.
+            if let yourProfileJson = json!["partner"] as? JSON {
+                guard let yourProfile = UserProfile(json: yourProfileJson, completion: profileCompletion) else {
+                    completion(profiles: nil, error: err("Invalid JSON returned for profiles."))
+                    return
+                }
+                profiles["partner"] = yourProfile
+            }
+            completion(profiles: profiles, error: nil)
         }
     }
     
@@ -172,6 +184,9 @@ public class EmotoAPI {
     }
     
     class func postUpdateCurrentEmotoWithCompletion(username: String, currentEmoto: Emoto, completion: (profile: UserProfile?, error: NSError?) -> Void) {
+        
+        // TODO: Save the updated profile.
+        
         let updateEmotoURL = NSURL(string: "\(baseURL)/users/\(username)/emoto")!
         httpJsonPostRequest(updateEmotoURL, payload: currentEmoto.toJSON()!) { (json, error) -> Void in
             guard error == nil else { completion(profile: nil, error: error); return }

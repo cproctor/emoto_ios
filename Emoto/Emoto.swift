@@ -66,7 +66,12 @@ class Emoto: NSObject, NSCoding, Glossy {
     
     // MARK: Decodable protocol
     // When an emoto is loaded from JSON, we load its image from archive if possible.
-    required init?(json: JSON) {
+    required convenience init?(json: JSON) {
+        self.init(json: json, completion: nil)
+    }
+    
+    // Allows initialization from JSON with a callback when the image is loaded. 
+    init?(json: JSON, completion: (()->Void)?) {
         guard let id: Int = "id" <~~ json else { return nil}
         
         if Emoto.localArchiveExists(id) {
@@ -89,8 +94,11 @@ class Emoto: NSObject, NSCoding, Glossy {
                 let data = NSData(contentsOfURL: imageUrl)
                 dispatch_async(dispatch_get_main_queue(), {
                     self.image = UIImage(data: data!)
+                    if completion != nil {
+                        completion!()
+                    }
                     guard self.save() else {
-                        print("ERROR. Could not archive")
+                        print("Loaded Emoto \(self.name) image from server. ERROR. Could not archive")
                         return
                     }
                     print("Loaded Emoto \(self.name) from server")

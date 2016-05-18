@@ -103,7 +103,12 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
     }
     
     // MARK: Decodable protocol
-    required init?(json: JSON) {
+    required convenience init?(json: JSON) {
+        self.init(json: json, completion: nil)
+    }
+    
+    // Allows a callback for when the emoto image has loaded.
+    init?(json: JSON, completion: (()->Void)?) {
         guard let temperature : Float = "temperature" <~~ json else { return nil }
         guard let city : String = "city" <~~ json else { return nil }
         guard let latitude : Float = "latitude" <~~ json else { return nil }
@@ -121,9 +126,9 @@ class UserProfile: NSObject, NSCoding, Decodable { // Also NSCoding for serializ
         let presentTimestamp : NSDate! = dateFormatter.dateFromString(presentTimestampString)!
         
         if let currentEmotoJson = json["current_emoto"] as? JSON {
-            if let emoto = Emoto(json: currentEmotoJson) {
-                self.currentEmoto = emoto
-            }
+            // Hands off the callback to the emoto so it cal be called when the emoto's image
+            // loads.
+            self.currentEmoto = Emoto(json: currentEmotoJson, completion: completion)
         }
 
         //guard let avatarUrl : NSURL = "avatar_url" <~~ json else { return nil }

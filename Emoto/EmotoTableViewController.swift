@@ -14,6 +14,7 @@ class EmotoTableViewController: UITableViewController {
     var emotos = [Emoto]()
     
     var selectedEmoto : Emoto? = nil
+    var selectedRow = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +71,12 @@ class EmotoTableViewController: UITableViewController {
         cell.imageChoice.image = emoto.image
         cell.emotoLabel.text = emoto.name
         
+        if (indexPath.row == selectedRow) {
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryType.None
+        }
+        
         // Could put emoto name here too.
         // Configure the cell...
         
@@ -83,6 +90,7 @@ class EmotoTableViewController: UITableViewController {
         selectedCell.contentView.backgroundColor = UIColor.redColor()
         let row = indexPath.row
         selectedEmoto = emotos[row]
+        selectedRow = row
         print("Selected emoto \(selectedEmoto!.name)")
     }
     

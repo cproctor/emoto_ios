@@ -63,7 +63,14 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         yourFormatter!.dateStyle = .NoStyle
         yourFormatter!.timeStyle = .ShortStyle
         
+        messagesTable.separatorStyle = .None
+        
         messages.removeAll()
+
+//        self.messagesTable.estimatedRowHeight = 80
+//        self.messagesTable.rowHeight = UITableViewAutomaticDimension
+//        self.messagesTable.setNeedsLayout()
+//        self.messagesTable.layoutIfNeeded()
         
         updateTimeZones()
         updateCopresenceWindow()
@@ -311,6 +318,32 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
+        let message = messages[indexPath.row]
+        let text = message.text
+        let font = UIFont(name: "Helvetica", size: 17.0)
+        let height = heightForLabel(text, font: font!, width: 240)
+        
+        if (height < 50) {
+            return 50
+        } else {
+            return height + 40
+        }
+    }
+    
+    func heightForLabel(text:String, font:UIFont, width:CGFloat) -> CGFloat
+    {
+        let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        label.font = font
+        label.text = text
+        
+        label.sizeToFit()
+        return label.frame.height
     }
     
     /*

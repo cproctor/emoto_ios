@@ -162,9 +162,12 @@
                                     <constraint firstAttribute="height" constant="44" id="fUG-58-PZF"/>
                                 </constraints>
                                 <items>
+                                    <barButtonItem image="Emoto Logo" id="O2X-PP-PrR" userLabel="Emoto Logo">
+                                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </barButtonItem>
                                     <barButtonItem title="Emoto" style="plain" id="a3Y-77-3Qh">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jcy-UG-EK2">
-                                            <rect key="frame" x="20" y="7" width="45" height="30"/>
+                                            <rect key="frame" x="104" y="7" width="45" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Emoto"/>
                                             <connections>
@@ -177,7 +180,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="ce3-VV-cYD">
                                         <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" id="nKd-gD-T1J">
-                                            <rect key="frame" x="75" y="7" width="195" height="30"/>
+                                            <rect key="frame" x="159" y="7" width="195" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
@@ -185,7 +188,7 @@
                                     </barButtonItem>
                                     <barButtonItem title="Send" style="plain" id="g1V-a9-3ZU">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Vqv-Lw-Fey">
-                                            <rect key="frame" x="280" y="7" width="45" height="30"/>
+                                            <rect key="frame" x="364" y="7" width="45" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Send"/>
                                             <connections>
@@ -305,6 +308,7 @@
     </scenes>
     <resources>
         <image name="Blue Sky" width="231" height="173"/>
+        <image name="Emoto Logo" width="74" height="75"/>
         <image name="Sunset" width="1280" height="800"/>
     </resources>
     <inferredMetricsTieBreakers>

@@ -26,6 +26,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     // its value will be assigned to the true property.
     var futureMessageEmoto : Emoto? = nil
     var futureCurrentEmoto : Emoto? = nil
+    var savedMessageText : String? = nil
     
     var myFormatter = NSDateFormatter()
     var yourFormatter = NSDateFormatter()
@@ -78,6 +79,9 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         acceptFutureValues()
+        if savedMessageText != nil {
+            messagesInput.text = savedMessageText
+        }
         
         self.navigationController?.navigationBarHidden = true
         
@@ -268,11 +272,13 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         if !text.isEmpty {
             let message = Message(text: text, emoto: emoto, author: self.myProfile!.username, timestamp: date)!
             messages += [message]
-            self.messagesTable.reloadData()
             messagesInput.text = ""
             EmotoAPI.postNewMessageWithCompletion(message) { (savedMessage, error) -> Void in
+                guard error == nil else {
+                    print(error!.localizedDescription)
+                    return
+                }
                 // TODO: Handle error
-                // TODO: WE shouldn't have to add to self.messages. This should be done by the PostNewMessage API call.
                 self.saveMessages()
             }
         }
@@ -325,6 +331,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     // select the message's emoto. Here we tell the EmotoTableViewController which is our purpose.
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "SelectCurrentEmoto") {
+            savedMessageText = messagesInput.text
             print("Selecting current emoto")
             let navCon = segue.destinationViewController as! UINavigationController
             let emotoTVCon = navCon.viewControllers.first as! EmotoTableViewController

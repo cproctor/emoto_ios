@@ -100,12 +100,26 @@ class Message: NSObject, NSCoding, Glossy {
     
     // Mark: Encodable protocol
     func toJSON() -> JSON? {
+        var emotoName : String?
+        if self.emoto != nil {
+            emotoName = self.emoto!.name
+        }
+        else {
+            emotoName = nil
+        }
         return jsonify([
             "id" ~~> self.id,
             "text" ~~> self.text,
             "author" ~~> self.author,
-            "emoto" ~~> self.emoto,
-            "created_time" ~~> self.timestamp
+            "emoto" ~~> emotoName,
+            "created_time" ~~> self.timestampAsString()
         ])
+    }
+    
+    func timestampAsString() -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        return dateFormatter.stringFromDate(self.timestamp)
     }
 }

@@ -20,8 +20,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Seed random number generator
         Flurry.startSession("89W9MCKHBC9QR9QDK6ZY");
         Flurry.logEvent("Onboard:Begin")
+        
+        if(UIApplication.instancesRespondToSelector(#selector(UIApplication.registerUserNotificationSettings(_:)))) {
+            UIApplication.sharedApplication().registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
+        }
+        
+        // Set up the app to fetch messages in the background.
+        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        
         srandom(arc4random())
         return true
+    }
+    
+    // This is the application invocation for background execution.
+    // Fetches messages. If there's something new from partner, issues a notification.
+    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        guard let username = defaults.objectForKey("username") as? String else { return }
+        EmotoAPI.getMessagesWithCompletion(username) { (messages, error) -> Void in
+            guard error == nil else { return }
+            let partnerMessages = messages!.filter({$0.author != username})
+            guard let lastPartnerMessage = partnerMessages.last else { return }
+            let latestMessageTimestamp = lastPartnerMessage.timestamp
+            if let lastMessageTimestamp = defaults.objectForKey("lastMessageTimestamp") as? NSDate {
+                if latestMessageTimestamp.isGreaterThanDate(lastMessageTimestamp) {
+                    Flurry.logEvent("Stream:NewMessageNotification")
+                    let localNotification = UILocalNotification()
+                    localNotification.fireDate = nil
+                    localNotification.alertBody = "New Emoto!"
+                    localNotification.timeZone = NSTimeZone.defaultTimeZone()
+                    UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
+                }
+            }
+            defaults.setObject(latestMessageTimestamp, forKey: "lastMessageTimestamp")
+        }
+        //return UIBackgroundFetchResult.NewData
     }
 
     func applicationWillResignActive(application: UIApplication) {

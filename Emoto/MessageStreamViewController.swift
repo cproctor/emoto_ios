@@ -62,7 +62,9 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     
     var messages : [Message] = [Message]() {
         didSet {
-            messagesTable.reloadData()
+            if isViewLoaded() {
+                messagesTable.reloadData()
+            }
         }
     }
     
@@ -347,9 +349,19 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func getUsernameFromDefaults() -> String {
-        return "chris"
+        //return "chris" // FOR TESTING
         let defaults = NSUserDefaults.standardUserDefaults()
         return defaults.objectForKey("username") as! String
     }
-
+    
+    func getTimeOfNewestMessageFromPartner() -> NSDate? {
+        let partnerName = yourProfile!.username
+        let partnerMessages = messages.filter({$0.author == partnerName})
+        if let lastMessage = partnerMessages.last {
+            return lastMessage.timestamp
+        }
+        else {
+            return nil
+        }
+    }
 }

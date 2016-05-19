@@ -125,39 +125,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     
     func syncProfile() {
         /*
-        // We're going to sync location.
-        var locationManager: CLLocationManager! = CLLocationManager()
-        locationManager.delegate = self
-        
-        switch CLLocationManager.authorizationStatus() {
-        case .AuthorizedWhenInUse:
-            // .We have access.
-            break
-        case .NotDetermined:
-            locationManager.requestAlwaysAuthorization()
-        case .Restricted, .Denied:
-            let alertController = UIAlertController(
-                title: "Location Access Disabled",
-                message: "Emoto needs access to your location to function. Please open this app's settings and set location access to 'Always'.",
-                preferredStyle: .Alert
-            )
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-            alertController.addAction(cancelAction)
-            
-            let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
-                if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                    UIApplication.sharedApplication().openURL(url)
-                }
-            }
-            alertController.addAction(openAction)
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
-        }
-        
-        
-        locationManager.requestWhenInUseAuthorization()
-        
-        var profile : UserProfile
+
         
         let defaults = NSUserDefaults.standardUserDefaults()
         

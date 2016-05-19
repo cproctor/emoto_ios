@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import UIKit
 
-class PairingViewController: UIViewController, CLLocationManagerDelegate {
+class PairingViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
     
     var username : String?
     var myProfile : UserProfile?
@@ -18,11 +18,14 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate {
 
     @IBOutlet weak var pairCodePrompt: UILabel!
     @IBOutlet weak var pairCodeLabel: UILabel!
+    @IBOutlet weak var pairCodeTextField: UITextField!
+    @IBOutlet weak var stackViewCenterY: NSLayoutConstraint!
     
     var locationManager: CLLocationManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        pairCodeTextField.delegate = self
         
         reloadView()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PairingViewController.reloadView), name: UIApplicationWillEnterForegroundNotification, object: nil)
@@ -143,19 +146,6 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate {
         alertController.addAction(openAction)
         self.presentViewController(alertController, animated: true, completion: nil)
     }
-    
-    // After the user enters a code.
-    @IBAction func pairCodeTextField(sender: UITextField) {
-        let enteredCode = sender.text!.uppercaseString
-        EmotoAPI.postPairWithCompletion(myProfile!.username, pairCode: enteredCode) { (profiles, error) -> Void in
-            guard error == nil else {
-                self.pairCodePrompt.text = "Sorry, wrong code. Try again?"
-                sender.text = ""
-                return
-            }
-            self.performSegueWithIdentifier("PairingSuccessful", sender: self)
-        }
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -163,9 +153,39 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func generateNewUsername() -> String {
-        return "\(UIDevice.currentDevice().name)_\(random())"
+        //return "\(UIDevice.currentDevice().name)_\(random())"
+        return "user\(random())"
     }
 
+    // MARK: Text Field Delegate
+    
+    func textFieldDidBeginEditing(textfield: UITextField) {
+        stackViewCenterY.constant = -100
+    }
+    
+    func textFieldDidEndEditing(textfield: UITextField) {
+        stackViewCenterY.constant = 0
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        let enteredCode = textField.text!.uppercaseString
+        EmotoAPI.postPairWithCompletion(myProfile!.username, pairCode: enteredCode) { (profiles, error) -> Void in
+            guard error == nil else {
+                dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                    self.pairCodePrompt.text = "Sorry, wrong code. Try again?"
+                    self.pairCodeTextField.text = ""
+                    return
+                }
+                return
+            }
+            dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                textField.resignFirstResponder()
+                self.performSegueWithIdentifier("PairingSuccessful", sender: self)
+            }
+        }
+        return true
+    }
+    
     /*
     // MARK: - Navigation
 

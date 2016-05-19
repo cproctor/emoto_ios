@@ -55,9 +55,6 @@
                                         <rect key="frame" x="0.0" y="230" width="321" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
-                                        <connections>
-                                            <action selector="pairCodeTextField:" destination="Ew3-F6-rIW" eventType="editingDidEnd" id="ssA-7p-5f0"/>
-                                        </connections>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -76,6 +73,8 @@
                     <connections>
                         <outlet property="pairCodeLabel" destination="gWV-OI-8xc" id="c9j-lT-Y9F"/>
                         <outlet property="pairCodePrompt" destination="7Yb-6O-RqT" id="fWG-pI-cS9"/>
+                        <outlet property="pairCodeTextField" destination="VxT-NW-BDU" id="0Ap-NS-odR"/>
+                        <outlet property="stackViewCenterY" destination="zAq-0x-bCb" id="tED-Qs-bYz"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="PairingSuccessful" id="Lb0-Ia-uTz"/>
                     </connections>
                 </viewController>

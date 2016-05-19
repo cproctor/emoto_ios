@@ -99,7 +99,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         
         // Sync with the server. Shall we put this on a timer?
         // Profile should be saved in user defaults, so we always know who's here.
-        fetchProfilesFromServer("chris")
+        fetchProfilesFromServer(getUsernameFromDefaults())
         
         // Set a timer to update the times in the copresence window
         updateTimes()
@@ -175,7 +175,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
                     print("Got your profile")
                     self.yourProfile = yourProfile
                 }
-                self.fetchMessagesFromServer("chris")
+                self.fetchMessagesFromServer(self.getUsernameFromDefaults())
             }
         }
     }
@@ -242,6 +242,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
             messages += [message]
             messagesInput.text = ""
             EmotoAPI.postNewMessageWithCompletion(message) { (savedMessage, error) -> Void in
+                Flurry.logEvent("Stream:SentMessage")
                 guard error == nil else {
                     print(error!.localizedDescription)
                     return
@@ -299,20 +300,30 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     // select the message's emoto. Here we tell the EmotoTableViewController which is our purpose.
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "SelectCurrentEmoto") {
+            Flurry.logEvent("Stream:StartedSettingCurrentEmoto")
             savedMessageText = messagesInput.text
             print("Selecting current emoto")
             let navCon = segue.destinationViewController as! UINavigationController
             let emotoTVCon = navCon.viewControllers.first as! EmotoTableViewController
             emotoTVCon.mode = "CURRENT EMOTO"
+            emotoTVCon.modeDescription = "Current"
             emotoTVCon.navigationItem.title = "Set Current Emoto"
         }
         if (segue.identifier == "SelectMessageEmoto") {
+            Flurry.logEvent("Stream:StartedSettingMessageEmoto")
             print("Selecting message emoto")
             let navCon = segue.destinationViewController as! UINavigationController
             let emotoTVCon = navCon.viewControllers.first as! EmotoTableViewController
             emotoTVCon.mode = "MESSAGE EMOTO"
+            emotoTVCon.modeDescription = "Message"
             emotoTVCon.navigationItem.title = "Set Message Emoto"
         }
+    }
+    
+    func getUsernameFromDefaults() -> String {
+        return "chris"
+        let defaults = NSUserDefaults.standardUserDefaults()
+        return defaults.objectForKey("username") as! String
     }
 
 }

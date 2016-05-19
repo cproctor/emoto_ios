@@ -142,13 +142,13 @@ public class EmotoAPI {
         }
     }
     
-    class func getEmotosWithCompletion(completion: (emotos: [Emoto]?, error: NSError?) -> Void) {
+    class func getEmotosWithCompletion(emotoCompletion: (()->Void)?, completion: (emotos: [Emoto]?, error: NSError?) -> Void) {
         httpJsonGetRequest(NSURL(string: "\(baseURL)/emotos")!) { (json, error) -> Void in
             guard error == nil else { completion(emotos: nil, error: error); return }
             var emotos = [Emoto]()
             if let emotosJson = json!["emotos"] as? [JSON] {
                 for emotoJson in emotosJson {
-                    let emoto = Emoto(json: emotoJson)
+                    let emoto = Emoto(json: emotoJson, completion: emotoCompletion)
                     emotos.append(emoto!)
                 }
                 completion(emotos: emotos, error: nil)

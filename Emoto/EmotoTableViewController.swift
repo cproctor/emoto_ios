@@ -11,6 +11,7 @@ import UIKit
 class EmotoTableViewController: UITableViewController {
 
     var mode : String?
+    var modeDescription : String?
     var selectedEmoto : Emoto? = nil
     var emotos : [Emoto] = [Emoto]() {
         didSet {
@@ -49,11 +50,15 @@ class EmotoTableViewController: UITableViewController {
     }
     
     func fetchEmotosFromServer() {
-        EmotoAPI.getEmotosWithCompletion() { (emotos, error) -> Void in
+        EmotoAPI.getEmotosWithCompletion(reload) { (emotos, error) -> Void in
             dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
                 self.emotos = emotos!
             }
         }
+    }
+    
+    func reload() {
+        self.tableView.reloadData()
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -84,10 +89,10 @@ class EmotoTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "EmotoWasSelected") {
             let svc = segue.destinationViewController as! MessageStreamViewController
-            
+            Flurry.logEvent("Emoto:Selected\(modeDescription)Emoto")
             if mode == "CURRENT EMOTO" { // We came here to set the current emoto.
                 // TODO READ USERNAME FROM USER DEFAULTS
-                EmotoAPI.postUpdateCurrentEmotoWithCompletion("chris", currentEmoto: selectedEmoto!, profileCompletion: svc.updateCopresenceWindow) { (profile, error) -> Void in
+                EmotoAPI.postUpdateCurrentEmotoWithCompletion(getUsernameFromDefaults(), currentEmoto: selectedEmoto!, profileCompletion: svc.updateCopresenceWindow) { (profile, error) -> Void in
                     guard error == nil else {
                         print("Error selecting emoto")
                         return
@@ -101,6 +106,14 @@ class EmotoTableViewController: UITableViewController {
                 svc.futureMessageEmoto = selectedEmoto!
             }
         }
+        else {
+            Flurry.logEvent("Emoto:CancelledSelecting\(modeDescription)Emoto")
+        }
+    }
+    
+    func getUsernameFromDefaults() -> String {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        return defaults.objectForKey("username") as! String
     }
     
     /*

@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // Seed random number generator
+        Flurry.startSession("89W9MCKHBC9QR9QDK6ZY");
+        Flurry.logEvent("Onboard:Begin")
         srandom(arc4random())
         return true
     }

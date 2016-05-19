@@ -44,18 +44,22 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
         switch CLLocationManager.authorizationStatus() {
         case .AuthorizedWhenInUse, .AuthorizedAlways:
             print("We have location permission. Requesting location.")
+            Flurry.logEvent("Onboard:LocationAlreadyAuthorized")
             locationManager!.requestLocation() // Calls locationManager(manager:didUpdateLocations locations)
             break
         case .NotDetermined:
             print("Requesting location permission")
+            Flurry.logEvent("Onboard:LocationAuthRequested")
             locationManager!.requestWhenInUseAuthorization() // Calls locationManager(:didChangeAuthorizationStatus)
             break
         case .Denied:
             print("Location permission denied. Prompt user to change settings.")
+            Flurry.logEvent("Onboard:LocationAlreadyDenied")
             promptToChangeSettings() // Then the user will re-open the app.
             break
         case .Restricted:
             print("This device cannot use location services.")
+            Flurry.logEvent("Onboard:LocationAlreadyRestricted")
         }
     }
     
@@ -86,8 +90,8 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             print("Found user's location: \(location)")
+            locationManager!.stopUpdatingLocation()
             if userLocation == nil {
-                locationManager!.stopUpdatingLocation()
                 userLocation = location
                 userLocationObtained()
             }
@@ -103,15 +107,18 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
         username = defaults.objectForKey("username") as? String
         if username == nil {
             print("Creating new user")
+            Flurry.logEvent("Onboard:NewAccountCreated")
             let newUsername = generateNewUsername()
             EmotoAPI.postSignupWithCompletion(newUsername, latitude: latitude, longitude: longitude) { (profile, error) -> Void in
                 guard error == nil else { print("error in signup"); return }
+                defaults.setObject(newUsername, forKey: "username")
                 self.myProfile = profile!
                 self.userProfileObtained()
             }
         }
         else {
             print("Fetching existing user profile")
+            Flurry.logEvent("Onboard:ExistingAccountLoaded")
             EmotoAPI.postUpdateLocationWithCompletion(username!, latitude: latitude, longitude: longitude) { (profile, error) -> Void in
                 guard error == nil else { print("error in signup"); return }
                 self.myProfile = profile!
@@ -130,6 +137,7 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
     // Leaves the user either out of the app (come on back in!) or sitting on the login screen with
     // nothing to do...
     func promptToChangeSettings() {
+        Flurry.logEvent("Onboard:ChangeAuthSettingsPrompted")
         let alertController = UIAlertController(
             title: "Emoto Needs Location Access",
             message: "Emoto is about building copresence; it needs your location to function. Please open this app's settings and set location access to 'Always'.",
@@ -160,6 +168,7 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
     // MARK: Text Field Delegate
     
     func textFieldDidBeginEditing(textfield: UITextField) {
+        Flurry.logEvent("Onboard:StartedEnteringPairCode")
         stackViewCenterY.constant = -100
     }
     
@@ -168,9 +177,11 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        Flurry.logEvent("Onboard:SubmittedPairCode")
         let enteredCode = textField.text!.uppercaseString
         EmotoAPI.postPairWithCompletion(myProfile!.username, pairCode: enteredCode) { (profiles, error) -> Void in
             guard error == nil else {
+                Flurry.logEvent("Onboard:WrongPairCode")
                 dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
                     self.pairCodePrompt.text = "Sorry, wrong code. Try again?"
                     self.pairCodeTextField.text = ""
@@ -180,6 +191,7 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
             }
             dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
                 textField.resignFirstResponder()
+                Flurry.logEvent("Onboard:Complete")
                 self.performSegueWithIdentifier("PairingSuccessful", sender: self)
             }
         }

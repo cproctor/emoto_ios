@@ -19,10 +19,12 @@
 		8300E45A1CE4DB8700F4C4BC /* EmotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */; };
 		8309F5E51CEBB6FB00A32F24 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8309F5E41CEBB6FB00A32F24 /* CoreLocation.framework */; };
 		8309F5E91CECDC1300A32F24 /* PairingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8309F5E81CECDC1300A32F24 /* PairingViewController.swift */; };
+		8309F5EC1CED5B6400A32F24 /* libFlurry_7.6.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8309F5EB1CED5B6400A32F24 /* libFlurry_7.6.3.a */; };
+		8309F5F31CED5D2B00A32F24 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8309F5F01CED5C3F00A32F24 /* SystemConfiguration.framework */; };
+		8309F5F51CED5FC500A32F24 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8309F5EE1CED5C3600A32F24 /* Security.framework */; };
 		8313E0C71CE78FD900304339 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8313E0C61CE78FD900304339 /* UserProfile.swift */; };
 		83213B0F1CEAAF4300430F70 /* Emoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83213B0E1CEAAF4300430F70 /* Emoto.swift */; };
 		83BFAEBD1CD1D24D00C9F7C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */; };
-		83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */; };
 		83BFAEC21CD1D24D00C9F7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC01CD1D24D00C9F7C0 /* Main.storyboard */; };
 		83BFAEC41CD1D24D00C9F7C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC31CD1D24D00C9F7C0 /* Assets.xcassets */; };
 		83BFAEC71CD1D24D00C9F7C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83BFAEC51CD1D24D00C9F7C0 /* LaunchScreen.storyboard */; };
@@ -45,11 +47,15 @@
 		8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmotoAPI.swift; sourceTree = "<group>"; };
 		8309F5E41CEBB6FB00A32F24 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		8309F5E81CECDC1300A32F24 /* PairingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PairingViewController.swift; path = ../PairingViewController.swift; sourceTree = "<group>"; };
+		8309F5EB1CED5B6400A32F24 /* libFlurry_7.6.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_7.6.3.a; path = Flurry/libFlurry_7.6.3.a; sourceTree = "<group>"; };
+		8309F5EE1CED5C3600A32F24 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		8309F5F01CED5C3F00A32F24 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		8309F5F61CED601C00A32F24 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Flurry.h; path = Flurry/Flurry.h; sourceTree = "<group>"; };
+		8309F5F71CED604F00A32F24 /* Emoto-Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Emoto-Bridge.h"; sourceTree = "<group>"; };
 		8313E0C61CE78FD900304339 /* UserProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		83213B0E1CEAAF4300430F70 /* Emoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emoto.swift; sourceTree = "<group>"; };
 		83BFAEB91CD1D24D00C9F7C0 /* Emoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		83BFAEC11CD1D24D00C9F7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		83BFAEC31CD1D24D00C9F7C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83BFAEC61CD1D24D00C9F7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -64,6 +70,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8309F5F51CED5FC500A32F24 /* Security.framework in Frameworks */,
+				8309F5F31CED5D2B00A32F24 /* SystemConfiguration.framework in Frameworks */,
+				8309F5EC1CED5B6400A32F24 /* libFlurry_7.6.3.a in Frameworks */,
 				8309F5E51CEBB6FB00A32F24 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -74,6 +83,8 @@
 		83BFAEB01CD1D24D00C9F7C0 = {
 			isa = PBXGroup;
 			children = (
+				8309F5F01CED5C3F00A32F24 /* SystemConfiguration.framework */,
+				8309F5EE1CED5C3600A32F24 /* Security.framework */,
 				8309F5E41CEBB6FB00A32F24 /* CoreLocation.framework */,
 				83BFAEBB1CD1D24D00C9F7C0 /* Emoto */,
 				83BFAEBA1CD1D24D00C9F7C0 /* Products */,
@@ -91,6 +102,8 @@
 		83BFAEBB1CD1D24D00C9F7C0 /* Emoto */ = {
 			isa = PBXGroup;
 			children = (
+				8309F5F61CED601C00A32F24 /* Flurry.h */,
+				8309F5EB1CED5B6400A32F24 /* libFlurry_7.6.3.a */,
 				8309F5E81CECDC1300A32F24 /* PairingViewController.swift */,
 				8300E44A1CE4DAD500F4C4BC /* Decoder.swift */,
 				8300E44B1CE4DAD500F4C4BC /* Encoder.swift */,
@@ -100,7 +113,6 @@
 				8300E44F1CE4DAD500F4C4BC /* Gloss.swift */,
 				8300E4501CE4DAD500F4C4BC /* Operators.swift */,
 				83BFAEBC1CD1D24D00C9F7C0 /* AppDelegate.swift */,
-				83BFAEBE1CD1D24D00C9F7C0 /* ViewController.swift */,
 				83BFAEC01CD1D24D00C9F7C0 /* Main.storyboard */,
 				83BFAEC31CD1D24D00C9F7C0 /* Assets.xcassets */,
 				83BFAEC51CD1D24D00C9F7C0 /* LaunchScreen.storyboard */,
@@ -114,6 +126,7 @@
 				8300E4591CE4DB8700F4C4BC /* EmotoAPI.swift */,
 				1236DBF91CE0378A009DEE1F /* EmotoTableViewCell.swift */,
 				1236DBFB1CE037E9009DEE1F /* EmotoTableViewController.swift */,
+				8309F5F71CED604F00A32F24 /* Emoto-Bridge.h */,
 			);
 			path = Emoto;
 			sourceTree = "<group>";
@@ -194,7 +207,6 @@
 				1236DBFA1CE0378A009DEE1F /* EmotoTableViewCell.swift in Sources */,
 				83D94A301CDD3A7500D41D4D /* Message.swift in Sources */,
 				8313E0C71CE78FD900304339 /* UserProfile.swift in Sources */,
-				83BFAEBF1CD1D24D00C9F7C0 /* ViewController.swift in Sources */,
 				8300E4541CE4DAD500F4C4BC /* ExtensionDictionary.swift in Sources */,
 				83213B0F1CEAAF4300430F70 /* Emoto.swift in Sources */,
 				8309F5E91CECDC1300A32F24 /* PairingViewController.swift in Sources */,
@@ -326,9 +338,14 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Emoto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Emoto/Flurry",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.stanford.emoto.Emoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Emoto/Emoto-Bridge.h";
 			};
 			name = Debug;
 		};
@@ -340,9 +357,14 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Emoto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Emoto/Flurry",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.stanford.emoto.Emoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Emoto/Emoto-Bridge.h";
 			};
 			name = Release;
 		};

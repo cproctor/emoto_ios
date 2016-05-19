@@ -82,6 +82,9 @@ class Emoto: NSObject, NSCoding, Glossy {
             self.imageUrl = savedEmoto.imageUrl
             super.init()
             print("Loaded Emoto \(self.name) from archive")
+            if completion != nil {
+                completion!()
+            }
         }
         else {
             guard let name: String = "name" <~~ json else { return nil}

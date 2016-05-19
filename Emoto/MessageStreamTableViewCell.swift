@@ -17,6 +17,9 @@ class MessageStreamTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        messageText.numberOfLines = 0
+        messageText.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        messageText.autoresizingMask = UIViewAutoresizing.FlexibleHeight
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

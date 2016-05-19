@@ -112,6 +112,7 @@ class EmotoTableViewController: UITableViewController {
     }
     
     func getUsernameFromDefaults() -> String {
+        return "chris"
         let defaults = NSUserDefaults.standardUserDefaults()
         return defaults.objectForKey("username") as! String
     }

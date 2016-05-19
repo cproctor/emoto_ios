@@ -284,6 +284,32 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         */
     }
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
+        let message = messages[indexPath.row]
+        let text = message.text
+        let font = UIFont(name: "Helvetica", size: 17.0)
+        let height = heightForLabel(text, font: font!, width: 240)
+        
+        if (height < 50) {
+            return 50
+        } else {
+            return height + 40
+        }
+    }
+    
+    func heightForLabel(text:String, font:UIFont, width:CGFloat) -> CGFloat
+    {
+        let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        label.font = font
+        label.text = text
+        
+        label.sizeToFit()
+        return label.frame.height
+    }
+    
     // When MyEmoto is tapped, segue to select a new current emoto.
     @IBAction func myEmotoImageViewWasTapped(sender: UITapGestureRecognizer) {
         performSegueWithIdentifier("SelectCurrentEmoto", sender: sender)

@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         let defaults = NSUserDefaults.standardUserDefaults()
         guard let username = defaults.objectForKey("username") as? String else { return }
-        EmotoAPI.getMessagesWithCompletion(username) { (messages, error) -> Void in
+        EmotoAPI.getMessagesWithCompletion(username, messageCompletion: nil) { (messages, error) -> Void in
             guard error == nil else { return }
             let partnerMessages = messages!.filter({$0.author != username})
             guard let lastPartnerMessage = partnerMessages.last else { return }

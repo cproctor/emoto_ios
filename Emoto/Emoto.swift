@@ -19,12 +19,17 @@ class Emoto: NSObject, NSCoding, Glossy {
     var image: UIImage?
 
     // MARK: Archiving Paths
+    //Cache directory check out 
+    // Maybe need
     static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
     static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("emotos")
     
     // Returns the file URL at which an Emoto with the given ID should be saved.
     class func archiveFilePath(id: Int) -> String {
-        return Emoto.ArchiveURL.URLByAppendingPathComponent("emoto_\(id)").absoluteString
+        //print(Emoto.ArchiveURL.URLByAppendingPathComponent("emoto_\(id)").absoluteString)
+        //return Emoto.ArchiveURL.URLByAppendingPathComponent("emoto_\(id)").absoluteString
+        //print(Emoto.ArchiveURL.URLByAppendingPathComponent("emoto_\(id).emoto").path!)
+        return Emoto.ArchiveURL.URLByAppendingPathComponent("emoto_\(id).emoto").path!
     }
     
     // Checks whether an archived copy of an Emoto with the given ID exists.
@@ -129,7 +134,15 @@ class Emoto: NSObject, NSCoding, Glossy {
         */
         
         // For some reason I can't archive to file.
-        return NSKeyedArchiver.archiveRootObject(self, toFile: Emoto.archiveFilePath(self.id!))
+        let archivedData = NSKeyedArchiver.archivedDataWithRootObject(self)
+        do {
+            try NSFileManager.defaultManager().createDirectoryAtURL(Emoto.ArchiveURL, withIntermediateDirectories: true, attributes: [:])
+            try archivedData.writeToFile(Emoto.archiveFilePath(self.id!), options: [])
+            return true
+        } catch {
+            print(error)
+            return false
+        }
     }
 }
 

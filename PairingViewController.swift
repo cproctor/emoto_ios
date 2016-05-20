@@ -179,10 +179,21 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         Flurry.logEvent("Onboard:SubmittedPairCode")
         let enteredCode = textField.text!.uppercaseString
+        
+        // TYPE EMOTO TO SKIP THIS.
+        guard enteredCode != "EMOTO" else {
+            textField.resignFirstResponder()
+            Flurry.logEvent("Onboard:SkippedWithCheatCode")
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setObject("chris", forKey: "username")
+            self.performSegueWithIdentifier("PairingSuccessful", sender: self)
+            return true
+        }
         EmotoAPI.postPairWithCompletion(myProfile!.username, pairCode: enteredCode) { (profiles, error) -> Void in
             guard error == nil else {
                 Flurry.logEvent("Onboard:WrongPairCode")
                 dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                    print(error!.localizedDescription)
                     self.pairCodePrompt.text = "Sorry, wrong code. Try again?"
                     self.pairCodeTextField.text = ""
                     return

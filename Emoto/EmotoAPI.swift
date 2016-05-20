@@ -50,13 +50,13 @@ public class EmotoAPI {
         }
     }
     
-    class func getMessagesWithCompletion(username:String, completion:(messages: [Message]?, error: NSError?) -> Void) {
+    class func getMessagesWithCompletion(username:String, messageCompletion: (()->Void)?, completion:(messages: [Message]?, error: NSError?) -> Void) {
         httpJsonGetRequest(NSURL(string: "\(baseURL)/users/\(username)/messages")!) { (json, error) -> Void in
             guard error == nil else { completion(messages: nil, error: error); return }
             var messages = [Message]()
             if let messagesJson = json!["messages"] as? [JSON] {
                 for messageJson in messagesJson {
-                    let message = Message(json: messageJson)
+                    let message = Message(json: messageJson, completion: messageCompletion)
                     messages.append(message!)
                 }
                 completion(messages: messages, error: nil)
@@ -291,6 +291,7 @@ public class EmotoAPI {
                     completion(data: nil, error: responseError)
                 } else if let httpResponse = response as? NSHTTPURLResponse {
                     if httpResponse.statusCode != 200 {
+                        print(httpResponse.statusCode)
                         let statusError = NSError(domain:"com.emoto", code:httpResponse.statusCode, userInfo:[NSLocalizedDescriptionKey : "HTTP status code has unexpected value."])
                         completion(data: nil, error: statusError)
                     } else {

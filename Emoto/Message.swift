@@ -71,7 +71,11 @@ class Message: NSObject, NSCoding, Glossy {
     }
     
     // MARK: Decodable protocol
-    required init?(json: JSON) {
+    required convenience init? (json: JSON) {
+        self.init(json: json, completion: nil)
+    }
+    
+    required init?(json: JSON, completion: (()->Void)? ) {
         guard let id: Int = "id" <~~ json else { return nil}
         guard let text: String = "text" <~~ json else { return nil}
         guard let author: String = "author" <~~ json else { return nil}
@@ -79,8 +83,12 @@ class Message: NSObject, NSCoding, Glossy {
         guard let timestampString : String = "created_time" <~~ json else { return nil}
         
         if let emotoJson = json["emoto"] as? JSON {
-            if let emoto = Emoto(json: emotoJson) {
+            if let emoto = Emoto(json: emotoJson, completion: completion) {
+                print("Attaching emoto \(emoto.name) to message \(text)")
                 self.emoto = emoto
+            }
+            else {
+                print("Did not create emoto")
             }
         }
         

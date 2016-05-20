@@ -131,6 +131,7 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
         print("User profile obtained")
         dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
             self.pairCodeLabel.text = "Your pair code is \(self.myProfile!.pairCode)."
+            self.pairCodePrompt.text = "Enter your partner's pair code."
         }
     }
     

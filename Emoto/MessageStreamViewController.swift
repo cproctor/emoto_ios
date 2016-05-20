@@ -45,6 +45,10 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         }
     }
     
+    func viewDidAppear() {
+        messagesTable.reloadData()
+    }
+    
     func updateCopresenceWindow() {
         print("Updating copresence window")
         guard myProfile != nil else { return }
@@ -158,12 +162,35 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func fetchMessagesFromServer(username: String) {
-        EmotoAPI.getMessagesWithCompletion(username) { (messages, error) -> Void in
+        EmotoAPI.getMessagesWithCompletion(username, messageCompletion: reloadMessageTable) { (messages, error) -> Void in
             dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
                 guard error == nil else { return }
                 self.messages = messages!
             }
         }
+    }
+    
+    func reloadMessageTable() {
+        messagesTable.reloadData()
+        tableViewScrollToBottom(false)
+    }
+    
+    func tableViewScrollToBottom(animated: Bool) {
+        
+        let delay = 0.1 * Double(NSEC_PER_SEC)
+        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        
+        dispatch_after(time, dispatch_get_main_queue(), {
+            
+            let numberOfSections = self.messagesTable.numberOfSections
+            let numberOfRows = self.messagesTable.numberOfRowsInSection(numberOfSections-1)
+            
+            if numberOfRows > 0 {
+                let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
+                self.messagesTable.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+            }
+            
+        })
     }
     
     func fetchProfilesFromServer(username: String) {
@@ -205,11 +232,12 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         }
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! MessageStreamTableViewCell
         
-        
         cell.messageText.text = message.text
+        
         if message.emoto != nil {
             cell.emoto.image = message.emoto!.image
         }
+
         
         // Configure the cell...
         
@@ -242,6 +270,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         if !text.isEmpty {
             let message = Message(text: text, emoto: emoto, author: self.myProfile!.username, timestamp: date)!
             messages += [message]
+            reloadMessageTable()
             messagesInput.text = ""
             EmotoAPI.postNewMessageWithCompletion(message) { (savedMessage, error) -> Void in
                 Flurry.logEvent("Stream:SentMessage")
@@ -262,6 +291,11 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     
     // MARK: NSCoding
     func saveMessages() {
+        /*do {
+            try NSFileManager.defaultManager().createDirectoryAtURL(Message.ArchiveURL, withIntermediateDirectories: true, attributes: [:])
+        } catch {
+            print(error)
+        }*/
         let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(messages, toFile: Message.ArchiveURL.path!)
         if !isSuccessfulSave {
             print("Failed to save messages...")

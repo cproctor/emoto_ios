@@ -169,7 +169,7 @@
 						DevelopmentTeam = B4LEP89D5M;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Push = {
 								enabled = 1;
@@ -354,10 +354,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Emoto/Flurry",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.chrisproctor.emoto.Emoto;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.stanford.cs377u.emoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Emoto/Emoto-Bridge.h";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -373,10 +374,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Emoto/Flurry",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.chrisproctor.emoto.Emoto;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.stanford.cs377u.emoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Emoto/Emoto-Bridge.h";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

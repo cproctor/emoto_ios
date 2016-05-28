@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // This is the application invocation for background execution.
     // Fetches messages. If there's something new from partner, issues a notification.
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        /*
         let defaults = NSUserDefaults.standardUserDefaults()
         guard let username = defaults.objectForKey("username") as? String else { return }
         EmotoAPI.getMessagesWithCompletion(username, messageCompletion: nil) { (messages, error) -> Void in
@@ -52,6 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.setObject(latestMessageTimestamp, forKey: "lastMessageTimestamp")
         }
         //return UIBackgroundFetchResult.NewData
+        */
     }
     
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {

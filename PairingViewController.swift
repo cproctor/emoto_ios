@@ -214,7 +214,7 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
             print("Fetching existing user profile")
             Flurry.logEvent("Onboard:ExistingAccountLoaded")
             EmotoAPI.postUpdateLocationWithCompletion(username!, latitude: latitude, longitude: longitude) { (profile, error) -> Void in
-                guard error == nil else { print("error in signup"); return }
+                guard error == nil else { print("error in signup: \(error!.description)"); return }
                 self.myProfile = profile!
                 dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
                     self.ensurePairing()
@@ -253,12 +253,17 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
     // MARK: Onboarding Complete
     
     func didCompleteConfiguration() {
+        if deviceToken != nil {
+            EmotoAPI.postRegisterPushNotificationsWithCompletion(username!, deviceToken: deviceToken!) { (profile, error) -> Void in
+                guard error == nil else { print("error registering device token: \(error!.description)"); return}
+                print("registered device token")
+            }
+        } else {
+            print("skipping device token registration; there is no device token.")
+        }
         Flurry.logEvent("Onboard:Complete")
         self.performSegueWithIdentifier("PairingSuccessful", sender: self)
     }
-
-
-
     
     func generateNewUsername() -> String {
         //return "\(UIDevice.currentDevice().name)_\(random())"

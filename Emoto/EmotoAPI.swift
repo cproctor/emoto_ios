@@ -142,6 +142,18 @@ public class EmotoAPI {
         }
     }
     
+    class func postRegisterPushNotificationsWithCompletion(username: String, deviceToken: String, completion: (profile: UserProfile?, error: NSError?) -> Void) {
+        let pairUrl = NSURL(string: "\(baseURL)/users/\(username)/register_push_notifications")!
+        httpJsonPostRequest(pairUrl, payload: ["token": deviceToken]) { (json, error) -> Void in
+            guard error == nil else { completion(profile: nil, error: error); return }
+            if let profile = UserProfile(json: json!) {
+                completion(profile: profile, error: nil)
+            } else {
+                completion(profile: nil, error: err("Invalid profile data returned"))
+            }
+        }
+    }
+    
     class func getEmotosWithCompletion(emotoCompletion: (()->Void)?, completion: (emotos: [Emoto]?, error: NSError?) -> Void) {
         httpJsonGetRequest(NSURL(string: "\(baseURL)/emotos")!) { (json, error) -> Void in
             guard error == nil else { completion(emotos: nil, error: error); return }

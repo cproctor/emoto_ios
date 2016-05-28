@@ -30,7 +30,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
     
     var myFormatter = NSDateFormatter()
     var yourFormatter = NSDateFormatter()
-    var timer: NSTimer?
+    var timeTimer: NSTimer?
+    var messageReloadTimer: NSTimer?
     
     // MARK: Properties with observers
     var myProfile: UserProfile? {
@@ -109,7 +110,9 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         
         // Set a timer to update the times in the copresence window
         updateTimes()
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
+        timeTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector:#selector(MessageStreamViewController.updateTimes), userInfo: nil, repeats: true)
+        
+        messageReloadTimer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector:#selector(MessageStreamViewController.fetchMessagesFromServer), userInfo: nil, repeats: true)
         
         // Control the table view subclass
         self.messagesTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -161,8 +164,8 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
         // Dispose of any resources that can be recreated.
     }
     
-    func fetchMessagesFromServer(username: String) {
-        EmotoAPI.getMessagesWithCompletion(username, messageCompletion: reloadMessageTable) { (messages, error) -> Void in
+    func fetchMessagesFromServer() {
+        EmotoAPI.getMessagesWithCompletion(self.getUsernameFromDefaults(), messageCompletion: reloadMessageTable) { (messages, error) -> Void in
             dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
                 guard error == nil else { return }
                 self.messages = messages!
@@ -204,7 +207,7 @@ class MessageStreamViewController: UIViewController, UITableViewDataSource, UITa
                     print("Got your profile")
                     self.yourProfile = yourProfile
                 }
-                self.fetchMessagesFromServer(self.getUsernameFromDefaults())
+                self.fetchMessagesFromServer()
             }
         }
     }

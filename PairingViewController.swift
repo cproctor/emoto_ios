@@ -6,6 +6,55 @@
 //  Copyright © 2016 Chris Proctor. All rights reserved.
 //
 
+/*
+ Target bugs:
+ 
+OK  1. State not clearly shown.
+OK 2. There should be an onboarding screen explaining the app, and explaining the need to check for location.
+OK 3. Requesting location permissions should actually work.
+OK 4. Pairing should be persisted.
+OK 4.5 While in pair code mode, should check from time to time whether the server has found a pairing.
+OK 5. When a user logs in and has already been paired, onboarding flow should be skipped.
+ 6. Currently, changes to messages/emotos only update when changing screens. They should appear immediately.
+ 7. The app should not crash.
+ */
+
+/* 
+ Onboarding flow:
+ 
+ BEGIN 
+    -> welcome
+ 
+welcome
+    - Show Emoto launch screen
+    - Check location permissions
+        * If denied -> requestLocationPermissionRepair
+        * If not set -> requestLocationPermission
+        * If allowed -> userStatusCheck
+ 
+ requestLocationPermissionRepair
+    - Show modal view requesting user to go allow location permissions. Go to settings button will leave the app.
+ 
+ requestLocationPermission
+    - Show modal view explaining the need for location.
+    - Initiate location permission request. 
+        -> welcome
+ 
+ userStatusCheck
+    - attempt to load user profile from defaultSettings.
+        * If no profile found
+            - create and save a profile. 
+            -> userPairCheck
+        * If profile found -> userPairCheck
+ 
+ userPairCheck 
+    - check for pairing.
+        * If unpaired, show pair code and text input.
+            - wait for a few seconds; -> userPairCheck
+            - If text submitted, post to server; -> userPairCheck
+        * If paired, segue to message stream controller.
+ */
+
 import Foundation
 import CoreLocation
 import UIKit
@@ -15,92 +64,136 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
     var username : String?
     var myProfile : UserProfile?
     var userLocation : CLLocation?
+    var deviceToken : String?
+    var locationManager : CLLocationManager?
 
     @IBOutlet weak var pairCodePrompt: UILabel!
     @IBOutlet weak var pairCodeLabel: UILabel!
     @IBOutlet weak var pairCodeTextField: UITextField!
     @IBOutlet weak var stackViewCenterY: NSLayoutConstraint!
     
-    var locationManager: CLLocationManager?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         pairCodeTextField.delegate = self
-        
-        reloadView()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PairingViewController.reloadView), name: UIApplicationWillEnterForegroundNotification, object: nil)
-    }
-    
-    func reloadView() {
-        print("Initiating Pairing View")
-        // get location permissions
-        
         locationManager = CLLocationManager()
         locationManager!.delegate = self
         locationManager!.desiredAccuracy = kCLLocationAccuracyBest;
         locationManager!.distanceFilter = kCLDistanceFilterNone;
-        locationManager!.startUpdatingLocation()
         
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.pairingController = self
+        
+        // Fire welcome when the app enters the foreground.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PairingViewController.welcome), name: UIApplicationWillEnterForegroundNotification, object: nil)
+    }
+    
+    override func viewDidAppear(animated:Bool) {
+        super.viewDidAppear(animated)
+        //welcome()
+    }
+    
+    func welcome() {
+        print("welcome")
+        Flurry.logEvent("Onboard:Begin")
+        ensureLocationServicesAuthorization()
+    }
+    
+    // MARK: Location Services Authorization
+    
+    func ensureLocationServicesAuthorization() {
         switch CLLocationManager.authorizationStatus() {
         case .AuthorizedWhenInUse, .AuthorizedAlways:
-            print("We have location permission. Requesting location.")
-            Flurry.logEvent("Onboard:LocationAlreadyAuthorized")
-            locationManager!.requestLocation() // Calls locationManager(manager:didUpdateLocations locations)
-            break
+            Flurry.logEvent("Onboard:DidAuthorizeLocationServicesAuthorization")
+            ensureNotificationAuthorization()
         case .NotDetermined:
-            print("Requesting location permission")
-            Flurry.logEvent("Onboard:LocationAuthRequested")
-            locationManager!.requestWhenInUseAuthorization() // Calls locationManager(:didChangeAuthorizationStatus)
-            break
+            requestLocationAuthorization()
         case .Denied:
-            print("Location permission denied. Prompt user to change settings.")
-            Flurry.logEvent("Onboard:LocationAlreadyDenied")
-            promptToChangeSettings() // Then the user will re-open the app.
-            break
+            didDenyLocationServices()
         case .Restricted:
-            print("This device cannot use location services.")
-            Flurry.logEvent("Onboard:LocationAlreadyRestricted")
+            didRestrictLocationServices()
         }
     }
     
-    // Called after requesting location permission.
+    func requestLocationAuthorization() {
+        print("Showing modal before requesting authorizations.")
+        Flurry.logEvent("Onboard:DidRequestLocationServicesAuthorization")
+        let alertController = UIAlertController(
+            title: "App permissions",
+            message: "Emoto is a messaging app which supports intimacy for long-distance couples. Emoto will now requst several required app permissions.",
+            preferredStyle: .Alert
+        )
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            print("user tapped OK in app permissions dialog")
+            self.locationManager!.requestWhenInUseAuthorization()
+        }
+        alertController.addAction(OKAction)
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        switch status {
-        case .AuthorizedWhenInUse, .AuthorizedAlways:
-            manager.requestLocation() // Calls locationManager(manager:didUpdateLocations locations)
-            break
-        case .NotDetermined:
-            print("Not determined. Why not?")
-            break
-        case .Denied:
-            print("Location permission denied. Prompt user to change settings.")
-            promptToChangeSettings() // Then the user will re-open the app.
-            break
-        case .Restricted:
-            print("This device cannot use location services.")
-        }
+        ensureLocationServicesAuthorization()
     }
     
-    // If there is an error.
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print(error.localizedDescription)
     }
     
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            print("Found user's location: \(location)")
-            locationManager!.stopUpdatingLocation()
-            if userLocation == nil {
-                userLocation = location
-                userLocationObtained()
-            }
-        }
+    func didRestrictLocationServices() {
+        print("location auth is restricted. displaying terminal modal. :(")
+        Flurry.logEvent("Onboard:DidRestrictLocationServicesAuthorization")
+        let alertController = UIAlertController(
+            title: "Emoto Needs Location Access",
+            message: "Your phone does not have access to location services, which are required to run Emoto.",
+            preferredStyle: .Alert
+        )
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    // After successfully getting location permissions...
-    func userLocationObtained() {
-        
+    func didDenyLocationServices() {
+        print("location auth is denied. asking user to change settings.")
+        Flurry.logEvent("Onboard:DidDenyLocationServicesAuthorization")
+        let alertController = UIAlertController(
+            title: "Emoto Needs Location Access",
+            message: "Emoto is about building copresence; it needs your location to function. Please open this app's settings and set location access to 'Always'.",
+            preferredStyle: .Alert
+        )
+        let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
+            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                UIApplication.sharedApplication().openURL(url)
+            }
+        }
+        alertController.addAction(openAction)
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: Notification Services Authorization
+    
+    func ensureNotificationAuthorization() {
+        print("ensure notification authorization")
+        Flurry.logEvent("Onboard:DidRequestNotificationAuthorization")
+        let settings = UIUserNotificationSettings(forTypes: .Alert, categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+    }
+    
+    func didRegisterUserNotificationSettingsWithDeviceToken(deviceToken: String?) {
+        print("notification settings registered. requesting user location.")
+        self.deviceToken = deviceToken
+        locationManager!.requestLocation()
+    }
+    
+    // MARK: Location Lookup
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.first!
+        print("found user's location: \(location)")
+        locationManager!.stopUpdatingLocation()
+        userLocation = location
+        obtainUserProfile()
+    }
+    
+    // MARK: User Profile Configuration
+    
+    func obtainUserProfile() {
         let latitude = Float(userLocation!.coordinate.latitude)
         let longitude = Float(userLocation!.coordinate.longitude)
         let defaults = NSUserDefaults.standardUserDefaults()
@@ -113,7 +206,8 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
                 guard error == nil else { print("error in signup"); return }
                 defaults.setObject(newUsername, forKey: "username")
                 self.myProfile = profile!
-                self.userProfileObtained()
+                self.username = self.myProfile!.username
+                self.ensurePairing()
             }
         }
         else {
@@ -122,44 +216,49 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
             EmotoAPI.postUpdateLocationWithCompletion(username!, latitude: latitude, longitude: longitude) { (profile, error) -> Void in
                 guard error == nil else { print("error in signup"); return }
                 self.myProfile = profile!
-                self.userProfileObtained()
+                dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                    self.ensurePairing()
+                }
             }
         }
     }
     
-    func userProfileObtained() {
-        print("User profile obtained")
-        dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
-            self.pairCodeLabel.text = "Your pair code is \(self.myProfile!.pairCode)."
-            self.pairCodePrompt.text = "Enter your partner's pair code."
+    func ensurePairing() {
+        print("User profile obtained. Checking whether user has partner.")
+        // TODO: Update device token if necessary to enable push notifications.
+        checkUserPairStatus(username!) { (userIsPaired) -> Void in
+            dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                if userIsPaired {
+                    print("user has a partner")
+                    self.didCompleteConfiguration()
+                }
+                else {
+                    print("user not paired.")
+                    self.requestPairing()
+                }
+            }
         }
     }
     
-    // Leaves the user either out of the app (come on back in!) or sitting on the login screen with
-    // nothing to do...
-    func promptToChangeSettings() {
-        Flurry.logEvent("Onboard:ChangeAuthSettingsPrompted")
-        let alertController = UIAlertController(
-            title: "Emoto Needs Location Access",
-            message: "Emoto is about building copresence; it needs your location to function. Please open this app's settings and set location access to 'Always'.",
-            preferredStyle: .Alert
-        )
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        
-        let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
-            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(url)
-            }
-        }
-        alertController.addAction(openAction)
-        self.presentViewController(alertController, animated: true, completion: nil)
+    func requestPairing() {
+        pairCodeLabel.text = "Your pair code is \(self.myProfile!.pairCode)."
+        pairCodePrompt.text = "Enter your partner's pair code."
+        pairCodeTextField.hidden = false
+        let triggerTime = (Int64(NSEC_PER_SEC) * 10) // Check again after 10 seconds
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, triggerTime), dispatch_get_main_queue(), { () -> Void in
+            self.ensurePairing()
+        })
+    }
+    
+    // MARK: Onboarding Complete
+    
+    func didCompleteConfiguration() {
+        Flurry.logEvent("Onboard:Complete")
+        self.performSegueWithIdentifier("PairingSuccessful", sender: self)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+
+
     
     func generateNewUsername() -> String {
         //return "\(UIDevice.currentDevice().name)_\(random())"
@@ -187,13 +286,14 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
             Flurry.logEvent("Onboard:SkippedWithCheatCode")
             let defaults = NSUserDefaults.standardUserDefaults()
             defaults.setObject("chris", forKey: "username")
-            self.performSegueWithIdentifier("PairingSuccessful", sender: self)
+            self.didCompleteConfiguration()
             return true
         }
         EmotoAPI.postPairWithCompletion(myProfile!.username, pairCode: enteredCode) { (profiles, error) -> Void in
             guard error == nil else {
                 Flurry.logEvent("Onboard:WrongPairCode")
                 dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
+                    print("error while submitting pair code:")
                     print(error!.localizedDescription)
                     self.pairCodePrompt.text = "Sorry, wrong code. Try again?"
                     self.pairCodeTextField.text = ""
@@ -203,21 +303,29 @@ class PairingViewController: UIViewController, CLLocationManagerDelegate, UIText
             }
             dispatch_async(dispatch_get_main_queue()) { // ensures the closure below will execute on the main thread.
                 textField.resignFirstResponder()
-                Flurry.logEvent("Onboard:Complete")
-                self.performSegueWithIdentifier("PairingSuccessful", sender: self)
+                self.ensurePairing()
             }
         }
         return true
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // MARK: Helpers
+    func checkUserPairStatus(username: String, completion: (userIsPaired:Bool) -> Void) {
+        EmotoAPI.getProfileWithCompletion(username, profileCompletion: nil) { (profiles, error) -> Void in
+            guard error == nil else {
+                print(error!.description)
+                return
+            }
+            let userIsPaired = profiles!["partner"] != nil
+            completion(userIsPaired: userIsPaired)
+        }
     }
-    */
+
+    // MARK: Required overrides
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
     
 }

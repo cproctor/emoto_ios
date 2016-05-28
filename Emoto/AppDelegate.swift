@@ -12,6 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var pairingController : PairingViewController?
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -20,10 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Seed random number generator
         Flurry.startSession("89W9MCKHBC9QR9QDK6ZY");
         Flurry.logEvent("Onboard:Begin")
-        
-        if(UIApplication.instancesRespondToSelector(#selector(UIApplication.registerUserNotificationSettings(_:)))) {
-            UIApplication.sharedApplication().registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
-        }
         
         // Set up the app to fetch messages in the background.
         application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
@@ -55,6 +52,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.setObject(latestMessageTimestamp, forKey: "lastMessageTimestamp")
         }
         //return UIBackgroundFetchResult.NewData
+    }
+    
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        if notificationSettings.types != .None {
+            application.registerForRemoteNotifications()
+        }
+        else {
+            print("no notification permissions granted.")
+            pairingController!.didRegisterUserNotificationSettingsWithDeviceToken(nil)
+        }
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        let tokenChars = UnsafePointer<CChar>(deviceToken.bytes)
+        var tokenString = ""
+        for i in 0..<deviceToken.length {
+            tokenString += String(format: "%02.2hhx", arguments: [tokenChars[i]])
+        }
+        print("registered for remote notifications. device token: ", tokenString)
+        pairingController!.didRegisterUserNotificationSettingsWithDeviceToken(tokenString)
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print("Failed to register for remote notifications:", error)
+        pairingController!.didRegisterUserNotificationSettingsWithDeviceToken(nil)
     }
 
     func applicationWillResignActive(application: UIApplication) {
